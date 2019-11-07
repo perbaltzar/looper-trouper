@@ -1,0 +1,16 @@
+.drop-zone {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hidden {
+  display: none;
+}
+
+.highlight {
+  background-color: #00000055;
+}
