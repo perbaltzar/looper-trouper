@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="stylesheet" type="text/css" href="dropzone.css" />
+    <link rel="stylesheet" type="text/css" href="dropin.css" />
+    <title>Looper Trouper</title>
+  </head>
+  <body>
+    <div class="drop-zone">
+      <h3 class="drop-message hidden">Drop your file to load it</h3>
+    </div>
+    <div class="drop-in">
+      <button class="drop-in-button">X</button>
+    </div>
+    <h1>LOOPER TROUPER</h1>
+    <main>
+      <section>
+        <h2>ORIGINAL</h2>
+        <canvas id="original"></canvas>
+      </section>
+      <section>
+        <h2>LOOP</h2>
+        <canvas id="loop"></canvas>
+      </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.3/pixi.min.js"></script>
+    <script src="./dropzone.js"></script>
+    <script src="./dropin.js"></script>
+    <script src="./index.js"></script>
+  </body>
+</html>
