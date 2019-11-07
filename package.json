@@ -5,5 +5,8 @@
   "scripts": {
     "dev": "parcel index.html",
     "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "pixi.js": "^5.2.0"
   }
 }
