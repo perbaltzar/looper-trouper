@@ -7,6 +7,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "functions": "^1.0.9",
+    "mitt": "^1.2.0",
     "pixi.js": "^5.2.0"
   }
 }
