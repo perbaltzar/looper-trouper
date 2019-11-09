@@ -16,7 +16,7 @@ export default class LooperTrouper {
   /** @property {String} state current state  */
   /** @property {Number} startTime dynamic start time from context */
   /** @property {Number} progressTime seconds played */
-  /** @property {Number} progressPercentage percentage played */
+  /** @property {Number} progressPercent percentage played */
 
   constructor(view, width, height) {
     this.pixi = this.createPixi(view, width, height);
@@ -52,7 +52,7 @@ export default class LooperTrouper {
   }
 
   disconnectSource() {
-    this.source.disconnect();
+    if (this.source) this.source.disconnect();
   }
 
   getAudioBuffer(url) {
@@ -76,6 +76,7 @@ export default class LooperTrouper {
 
   play(position) {
     position = position || 0;
+    this.disconnectSource();
     this.createSource();
     this.source.start(0, position);
     this.state = PLAYING;
@@ -84,6 +85,27 @@ export default class LooperTrouper {
   pause() {
     this.disconnectSource();
     this.state = PAUSED;
+  }
+
+  forwardFive() {
+    this.disconnectSource();
+    this.createSource();
+    if (this.getProgressTime() + 5 > this.duration) {
+      // COde to set finished.
+    }
+    this.source.start(0, this.getProgressTime() + 5);
+    this.setStartTime(this.getProgressTime() + 5);
+  }
+
+  backFive() {
+    let time = this.getProgressTime() - 5;
+    this.disconnectSource();
+    this.createSource();
+    if (time < 0) {
+      time = 0;
+    }
+    this.source.start(0, time);
+    this.setStartTime(time);
   }
 
   setStartTime(offset) {
@@ -96,9 +118,10 @@ export default class LooperTrouper {
   }
 
   getProgressTime() {
-    return this.duration;
+    return this.audioContext.currentTime - this.startTime;
   }
-  getProgress() {
-    return;
+
+  setProgressPercent() {
+    this.progressPercent = this.getProgressTime / this.duration;
   }
 }

@@ -7,6 +7,8 @@ import validateFile from './functions/validateFile.js';
 import abba from './abba.mp3';
 
 const originalPlayPauseButton = document.querySelector('.original-play-pause');
+const originalForward = document.querySelector('.original-forward');
+const originalBack = document.querySelector('.original-back');
 const dropzone = document.querySelector('.drop-zone');
 const dropMessage = document.querySelector('.drop-message');
 let dragCounter = 0;
@@ -59,10 +61,14 @@ const originalTrouper = new LooperTrouper(
   originalCanvas.height
 );
 
-console.log(originalTrouper);
-
 originalPlayPauseButton.addEventListener('click', e => {
-  console.log('playPause');
   originalTrouper.playPause();
 });
-console.log(originalPlayPauseButton);
+
+originalForward.addEventListener('click', e => {
+  originalTrouper.forwardFive();
+});
+
+originalBack.addEventListener('click', e => {
+  originalTrouper.backFive();
+});
