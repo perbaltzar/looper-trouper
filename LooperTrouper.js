@@ -1,12 +1,19 @@
 import * as PIXI from 'pixi.js';
 import createAudioBuffer from './functions/createAudioBuffer';
 import getBPM from './functions/getBPM';
+import getPeaks from './functions/getPeaks';
+import Bar from './Bar';
+import ProgressLocator from './ProgressLocator';
 
+// Constant to prevent spellingmistakes
 const PLAYING = 'playing';
 const PAUSED = 'paused';
 
 export default class LooperTrouper {
+  /** @property {Number} width */
+  /** @property {Number} height */
   /** @property {AudioContext} audioContext */
+  /** @property {PIXI.Application} pixi */
   /** @property {AudioBufferSourceNode} source audio source  */
   /** @property {AudioBuffef} buffer the audio data */
   /** @property {String} name of audio file */
@@ -23,6 +30,9 @@ export default class LooperTrouper {
     this.audioContext = new window.AudioContext();
     this.state = PAUSED;
     this.startTime = this.audioContext.currentTime;
+    this.width = width;
+    this.height = height;
+    this.progressLocator = new ProgressLocator(0, height, this.pixi.stage);
   }
 
   createPixi(view, width, height) {
@@ -30,14 +40,20 @@ export default class LooperTrouper {
       view: view,
       width: width,
       height: height,
-      transparent: true
+      transparent: true,
+      resolution: 2
     }));
   }
 
   async loadAudio(url) {
     this.buffer = await this.getAudioBuffer(url);
+    this.duration = this.buffer.duration;
     this.bpm = await getBPM(url);
+    this.peaks = getPeaks(this.buffer, 300);
     this.createSource();
+    this.bars = this.createBars();
+    this.createUpdateWaveform();
+    // this.startAnimation();
   }
 
   saveFileInformation(file) {
@@ -122,6 +138,44 @@ export default class LooperTrouper {
   }
 
   setProgressPercent() {
-    this.progressPercent = this.getProgressTime / this.duration;
+    this.progressPercent = this.getProgressTime() / this.duration;
+  }
+
+  getProgressPercent() {
+    return this.getProgressTime() / this.duration;
+  }
+
+  createBars() {
+    let x = 0;
+    const width = this.width / this.peaks.length / 2;
+    const bars = this.peaks.map(peak => {
+      x += width;
+      const height = peak * this.height;
+      const y = this.height / 4 - height / 4;
+
+      const bar = new Bar(x, y, width, height, this.pixi.stage);
+      return bar;
+    });
+    return bars;
+  }
+
+  createUpdateWaveform() {
+    this.pixi.ticker.add(() => {
+      if (this.state === PLAYING) {
+        // Place locator
+        // this.progressLocator.update(this.width * this.getProgressPercent());
+        // Check if wavebar should change color
+        for (let i = 0; i < this.bars.length; i++) {
+          const progress = (this.width * this.getProgressPercent()) / 2;
+          if (!this.bars[i].played && this.bars[i].x < progress) {
+            this.bars[i].played = true;
+            this.bars[i].draw();
+          } else if (this.bars[i].played && this.bars[i].x > progress) {
+            this.bars[i].played = false;
+            this.bars[i].draw();
+          }
+        }
+      }
+    });
   }
 }
