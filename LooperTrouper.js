@@ -345,12 +345,22 @@ export default class LooperTrouper {
     this.firstBeat = (firstIndex / resolution) * this.duration;
   }
 
-  findLastBeat(firstBeat, minDuration) {
+  findLastBeat(minDuration) {
     const secondsPerBeat = 60 / this.bpm;
     let lastBeat = 0;
-    for (let i = 1; lastBeat - firstBeat < minDuration; i++) {
-      lastBeat = firstBeat + secondsPerBeat * 16 * i;
+    for (let i = 1; lastBeat - this.firstBeat < minDuration; i++) {
+      lastBeat = this.firstBeat + secondsPerBeat * 16 * i;
     }
     this.lastBeat = lastBeat;
+  }
+
+  /**
+   * returns an object with start and end time of suggested loop
+   * @param minimumDuration Shortest the loop can be
+   */
+  suggestLoop(minimumDuration) {
+    const firstBeat = this.findFirstBeat();
+    const lastBeat = this.findLastBeat(minimumDuration);
+    return { start: firstBeat, end: lastBeat };
   }
 }
