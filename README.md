@@ -20,13 +20,10 @@ A big chunk of help from to alot of people.
 ### Graphics
 
 - [ ] Visualization of BPM in side bar.
-- [ ] Reset color indicator when loop is finished
-- [ ] Don't show original playing when it's not
 - [ ] Loading Screen
 - [ ] Print out song information in side bar
 - [ ] Print out song on canvas with peaks data
 - [ ] Change position in canvas and play from there
-- [ ] Graphics show played part of song
 
 ### Effects
 
@@ -46,11 +43,14 @@ A big chunk of help from to alot of people.
 
 ### Extra
 
+- [x] Don't show original playing when it's not
 - [ ] Pick multiple parts of song and build loop
 - [ ] Export loop to computer
 
 ## Done
 
+- [x] Graphics show played part of song
+- [x] Reset color indicator when loop is finished
 - [x] Analize songs data and suggest a loop
 - [x] Load the copied song in loop canvas
 - [x] Able to select loop in canvas
