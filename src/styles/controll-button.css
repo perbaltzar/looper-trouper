@@ -1,13 +1,20 @@
 .controll-buttons {
   display: flex;
   justify-content: center;
+  background: #dadd93;
+  padding: 30px 50px;
 }
 .controll-button {
-  padding: 5px 10px;
-  background-color: rgb(61, 68, 89);
-  margin: 5px;
-  border-radius: 5px;
+  margin: 0 8px;
+  height: 60px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+  background-color: #ec417a;
+  border-radius: 8px;
+  border: none;
 }
 .controll-button:hover {
-  background-color: rgb(104, 110, 148);
+  background-color: #eab6cc;
 }
