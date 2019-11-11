@@ -6,7 +6,6 @@ class ProgressLocator extends PIXI.Sprite {
     this.y = 0;
     this.height = height;
     this.scale.set(0.1, 0.1);
-
     parent.addChild(this);
     this.tick(-100);
   }
