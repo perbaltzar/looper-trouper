@@ -1,0 +1,39 @@
+.speaker-container {
+  width: 90%;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 200px;
+  z-index: -1;
+}
+.speaker {
+  width: 505px;
+  height: 505px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.woofer {
+  transform: rotate(30deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.red-woofer {
+  width: 200px;
+  height: 400px;
+  background: #c43f51;
+  border-bottom-left-radius: 300px;
+  border-top-left-radius: 300px;
+}
+.black-woofer {
+  width: 200px;
+  height: 400px;
+  border-bottom-right-radius: 400px;
+  border-top-right-radius: 400px;
+  background: #414141;
+}
