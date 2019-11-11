@@ -70,8 +70,16 @@ export default class LooperTrouper {
       // the position in percent
       const { x, y } = event.data.global;
 
-      if (y > 30) {
+      if (this.placingLoop) {
+        this.placingLoop = false;
+        return;
+      }
+      if (y > 30 && !this.placingLoop) {
         this.changeLocatorPosition(x);
+      }
+      if (y < 30 && !this.placingLoop) {
+        this.loopGraphics.start = x;
+        this.placingLoop = true;
       }
     });
     this.createUpdateWaveform();
@@ -358,7 +366,17 @@ export default class LooperTrouper {
         // Place locator
         this.locator.tick(this.width * this.getProgressPercent());
 
+        // Place Loop
+        if (this.placingLoop) {
+        }
+
         if (this.reDraw) this.doDraw = false;
+      }
+      if (this.placingLoop) {
+        const mouseX = this.pixi.renderer.plugins.interaction.mouse.global.x;
+
+        this.loopGraphics.placeEnd(mouseX);
+        this.loopGraphics.draw();
       }
     });
   }
