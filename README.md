@@ -43,12 +43,12 @@ A big chunk of help from to alot of people.
 
 ### Extra
 
-- [x] Don't show original playing when it's not
 - [ ] Pick multiple parts of song and build loop
 - [ ] Export loop to computer
 
 ## Done
 
+- [x] Don't show original playing when it's not
 - [x] Graphics show played part of song
 - [x] Reset color indicator when loop is finished
 - [x] Analize songs data and suggest a loop
