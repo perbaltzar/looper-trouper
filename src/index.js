@@ -1,10 +1,9 @@
 import 'regenerator-runtime/runtime';
 import * as PIXI from 'pixi.js';
-import getBPM from './getBPM/index.js';
 import LooperTrouper from './LooperTrouper.js';
-import loadFile from './functions/loadFile.js';
-import validateFile from './functions/validateFile.js';
-import abba from './abba.mp3';
+import loadFile from './utils/loadFile.js';
+import validateFile from './utils/validateFile.js';
+import abba from './assets/abba.mp3';
 
 const originalPlayPauseButton = document.querySelector('.original-play-pause');
 const originalForward = document.querySelector('.original-forward');

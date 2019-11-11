@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import createAudioBuffer from './functions/createAudioBuffer';
-import getBPM from './functions/getBPM';
-import getPeaks from './functions/getPeaks';
+import createAudioBuffer from './utils/createAudioBuffer';
+import getBPM from './utils/getBPM';
+import getPeaks from './utils/getPeaks';
 import Bar from './Bar';
 import ProgressLocator from './ProgressLocator';
 
