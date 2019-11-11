@@ -1,0 +1,36 @@
+.logo-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+h1 {
+  color: #414141;
+  font-size: 32px;
+  font-weight: 500;
+  align-self: flex-start;
+}
+.circle {
+  border-radius: 50%;
+  background: #414141;
+  margin-left: 4px;
+}
+.circle1 {
+  height: 16px;
+  width: 16px;
+  margin-left: 12px;
+}
+.circle2 {
+  height: 18px;
+  width: 18px;
+}
+.circle3 {
+  height: 20px;
+  width: 20px;
+}
+.circle4 {
+  border: 3px solid #414141;
+  background: none;
+  height: 22px;
+  width: 22px;
+}
