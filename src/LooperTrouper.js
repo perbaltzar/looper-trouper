@@ -277,7 +277,7 @@ export default class LooperTrouper {
    * @param end loop end in seconds
    */
   exportLoop(start, end) {
-    if (!start || !end) {
+    if (start === undefined || end === undefined) {
       console.log('no duration given');
       return {};
     }
@@ -327,31 +327,38 @@ export default class LooperTrouper {
     // Loop through and check difference between peaks, lower the need to check different songs
     let topPeak = 1;
 
+    const peaks = getPeaks(this.buffer, resolution);
+
     // lowest criteria in difference to trust the value
     const j = 0.2;
     let firstIndex = 0;
     while (j < topPeak && firstIndex === 0) {
-      for (let i = 0; i < this.peaks.length; i++) {
-        const diff = this.peaks[i] - this.peaks[i + 1];
+      for (let i = 0; i < peaks.length; i++) {
+        const diff = peaks[i] - peaks[i + 1];
         if (diff > topPeak && i < resolution * 0.3) {
           firstIndex = i;
           break;
         }
       }
-      topPeak -= 0.1;
+      topPeak -= 0.05;
     }
 
     // get time from index
-    this.firstBeat = (firstIndex / resolution) * this.duration;
+    return (this.firstBeat = (firstIndex / resolution) * this.duration);
   }
 
-  findLastBeat(minDuration) {
+  /**
+   * return position of last beat of the suggested loop
+   * @param minimumDuration minimum number of seconds the loop can be
+   */
+  findLastBeat(minimumDuration) {
+    console.log(this.bpm);
     const secondsPerBeat = 60 / this.bpm;
     let lastBeat = 0;
-    for (let i = 1; lastBeat - this.firstBeat < minDuration; i++) {
+    for (let i = 1; lastBeat - this.firstBeat < minimumDuration; i++) {
       lastBeat = this.firstBeat + secondsPerBeat * 16 * i;
     }
-    this.lastBeat = lastBeat;
+    return (this.lastBeat = lastBeat);
   }
 
   /**
