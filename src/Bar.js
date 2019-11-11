@@ -5,7 +5,7 @@ class Bar extends PIXI.Graphics {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.color = 0x00ff00;
+    this.color = 0x008800;
     this.parent = parent;
     this.beginFill(this.color);
     this.drawRect(x, y, width, height);
@@ -15,11 +15,19 @@ class Bar extends PIXI.Graphics {
   }
 
   draw() {
-    this.color = 0x00ff00;
-    if (this.played) this.color = 0x0000ff;
+    this.color = this.played ? 0x000088 : 0x008800;
     this.beginFill(this.color);
     this.drawRect(this.x, this.y, this.width, this.height);
     this.endFill();
+  }
+  tick(progress) {
+    if (!this.played && this.x < progress) {
+      this.played = true;
+      this.draw();
+    } else if (this.played && this.x > progress) {
+      this.played = false;
+      this.draw();
+    }
   }
 }
 

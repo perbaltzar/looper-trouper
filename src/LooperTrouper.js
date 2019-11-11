@@ -23,21 +23,26 @@ export default class LooperTrouper {
   /** @property {[Number]} peaks  the peaks from -1 to 1 */
   /** @property {String} state current state  */
   /** @property {Number} startTime dynamic start time from context */
-  /** @property {Number} progressTime seconds played */
+  /** @property {Number} Progress seconds played */
   /** @property {Number} progressPercent percentage played */
   /** @property {Number} firstBeat Index of first beat of suggested loop */
   /** @property {Number} lastBeat Index of last beat of suggested loop */
   /** @property {Boolean} looped if this is a loop */
+  /** @property {ProgressLocator} locator PIXI.Sprite of progress*/
+  /** @property {Bars} bars PIXI.Graphics of wave bars*/
+  /** @property {Boolean} doDraw redraw graphics once when true*/
 
   constructor(view, width, height, looped) {
-    this.pixi = this.createPixi(view, width, height);
+    this.progress = 0;
+    this.doDraw = false;
+    this.createPixi(view, width, height);
     this.audioContext = new window.AudioContext();
     this.state = PAUSED;
-    this.startTime = this.audioContext.currentTime;
     this.width = width;
     this.height = height;
-    this.progressLocator = new ProgressLocator(0, height, this.pixi.stage);
+    this.locator = new ProgressLocator(100, height, this.pixi.stage);
     this.looped = looped || false;
+    this.setStartTime(this.getNow());
   }
 
   /**
@@ -47,13 +52,24 @@ export default class LooperTrouper {
    * @param height height of the element
    */
   createPixi(view, width, height) {
-    return (this.pixi = new PIXI.Application({
+    this.pixi = this.pixi = new PIXI.Application({
       view: view,
       width: width,
       height: height,
       transparent: true,
       resolution: 2
-    }));
+    });
+
+    // Click event
+    this.pixi.renderer.plugins.interaction.on('pointerdown', event => {
+      // the position in percent
+      const position = event.data.global.x - this.locator.width / 2;
+      this.locator.moveTo(position);
+      const time = this.duration * (position / this.width);
+      this.seekTo(time);
+      this.setStartTime(time);
+    });
+    this.createUpdateWaveform();
   }
 
   /**
@@ -68,7 +84,6 @@ export default class LooperTrouper {
     this.sampleRate = this.buffer.sampleRate;
     this.createSource();
     this.bars = this.createBars();
-    this.createUpdateWaveform();
   }
 
   loadBuffer(buffer) {
@@ -77,7 +92,6 @@ export default class LooperTrouper {
     this.sampleRate = this.buffer.sampleRate;
     this.createSource();
     this.bars = this.createBars();
-    this.createUpdateWaveform();
   }
 
   /**
@@ -134,24 +148,22 @@ export default class LooperTrouper {
    */
   playPause() {
     if (this.isPlaying()) {
-      this.setProgressTime();
+      this.setProgress(this.getProgressPlayed());
       this.pause();
       return;
     }
-    this.setStartTime(this.progressTime);
-    this.play(this.progressTime);
-    return;
+    this.setStartTime(this.getProgress());
+    this.play();
   }
 
   /**
    * plays the audio
    * @param position position to play from
    */
-  play(position) {
-    position = position || 0;
+  play() {
     this.disconnectSource();
     this.createSource();
-    this.source.start(0, position);
+    this.source.start(0, this.getProgress());
     this.state = PLAYING;
   }
 
@@ -164,30 +176,51 @@ export default class LooperTrouper {
   }
 
   /**
+   * plays audio from chosen point
+   * @param time the time to start from
+   */
+  seekTo(time) {
+    this.setProgress(time);
+    if (this.isPlaying()) {
+      this.play();
+      return;
+    }
+    this.reDraw();
+  }
+
+  /**
    * Skips 5 seconds forward
    */
   forwardFive() {
-    this.disconnectSource();
-    this.createSource();
-    if (this.getProgressTime() + 5 > this.duration) {
-      // Code to set finished.
+    if (this.isPlaying()) {
+      this.setProgress(this.getProgressPlayed() + 5);
+      this.setStartTime(this.getProgress());
+      this.play();
+      return;
     }
-    this.source.start(0, this.getProgressTime() + 5);
-    this.setStartTime(this.getProgressTime() + 5);
+    this.reDraw();
+    this.setProgress(this.getProgress() + 5);
   }
 
   /**
    * rewinds 5 seconds
    */
   backFive() {
-    let time = this.getProgressTime() - 5;
-    this.disconnectSource();
-    this.createSource();
-    if (time < 0) {
-      time = 0;
+    if (this.isPlaying()) {
+      this.setProgress(this.getProgressPlayed() - 5);
+      if (this.getProgress() < 0) this.setProgress(0);
+      this.setStartTime(this.getProgress());
+      this.play();
+      return;
     }
-    this.source.start(0, time);
-    this.setStartTime(time);
+
+    if (this.getProgress() < 5) {
+      this.setProgress(0);
+    } else {
+      this.setProgress(this.getProgress() - 5);
+    }
+    console.log(this.getProgress());
+    this.reDraw();
   }
 
   /**
@@ -200,31 +233,54 @@ export default class LooperTrouper {
   }
 
   /**
-   * time in seconds of the audio clip played
+   * return current startTime
    */
-  setProgressTime() {
-    this.progressTime = this.audioContext.currentTime - this.startTime;
+  getStartTime() {
+    return this.startTime;
   }
 
   /**
-   * return time in seconds of the audio clip played
+   * return current position in seconds after startTime
    */
-  getProgressTime() {
-    return this.audioContext.currentTime - this.startTime;
+  getNow() {
+    return this.audioContext.currentTime;
   }
 
   /**
-   * saves the progress in percent
+   * set the progress to now
    */
-  setProgressPercent() {
-    this.progressPercent = this.getProgressTime() / this.duration;
+  getProgress() {
+    return this.progress;
   }
+
+  /**
+   * set the progress to time
+   * @param time position in seconds
+   */
+  setProgress(time) {
+    this.progress = time;
+  }
+
+  /**
+   * return seconds played of the song
+   */
+  getProgressPlayed() {
+    return this.audioContext.currentTime - this.getStartTime();
+  }
+
+  // /**
+  //  * return time in seconds of the audio clip played
+  //  */
+  // getProgress() {
+  //   return this.audioContext.currentTime - this.startTime;
+  // }
 
   /**
    * return the progress in percent
    */
   getProgressPercent() {
-    return this.getProgressTime() / this.duration;
+    if (this.isPlaying()) return this.getProgressPlayed() / this.duration;
+    return this.getProgress() / this.duration;
   }
 
   /**
@@ -244,29 +300,29 @@ export default class LooperTrouper {
     return bars;
   }
 
+  reDraw() {
+    this.doDraw = true;
+  }
   /**
    * Loop to change colors of played bars
    */
   createUpdateWaveform() {
     this.pixi.ticker.add(() => {
-      if (this.state === PLAYING) {
+      if (this.state === PLAYING || this.doDraw) {
+        // Get progress
+        const progress = (this.width * this.getProgressPercent()) / 2;
+
         // Place locator
-        // this.progressLocator.update(this.width * this.getProgressPercent());
-        // Check if wavebar should change color
-        for (let i = 0; i < this.bars.length; i++) {
-          const progress = (this.width * this.getProgressPercent()) / 2;
-          if (!this.bars[i].played && this.bars[i].x < progress) {
-            this.bars[i].played = true;
-            this.bars[i].draw();
-          } else if (this.bars[i].played && this.bars[i].x > progress) {
-            this.bars[i].played = false;
-            this.bars[i].draw();
-          }
-        }
+        this.locator.tick(this.width * this.getProgressPercent());
+
+        // Check if bars should change color
+        this.bars.forEach(bar => bar.tick(progress));
+
         // Look for eventsFired when clip finished
         if (this.getProgressPercent() > 0.99999) {
           this.setStartTime();
         }
+        if (this.reDraw) this.doDraw = false;
       }
     });
   }
