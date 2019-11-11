@@ -28,6 +28,8 @@ export default class LooperTrouper {
   /** @property {Number} firstBeat Index of first beat of suggested loop */
   /** @property {Number} lastBeat Index of last beat of suggested loop */
   /** @property {Boolean} looped if this is a loop */
+  /** @property {ProgressLocator} locator PIXI.Sprite of progress*/
+  /** @property {Bars} bars PIXI.Graphics of wave bars*/
 
   constructor(view, width, height, looped) {
     this.pixi = this.createPixi(view, width, height);
@@ -36,7 +38,7 @@ export default class LooperTrouper {
     this.startTime = this.audioContext.currentTime;
     this.width = width;
     this.height = height;
-    this.progressLocator = new ProgressLocator(0, height, this.pixi.stage);
+    this.locator = new ProgressLocator(100, height, this.pixi.stage);
     this.looped = looped || false;
   }
 
@@ -250,19 +252,15 @@ export default class LooperTrouper {
   createUpdateWaveform() {
     this.pixi.ticker.add(() => {
       if (this.state === PLAYING) {
+        // Get progress
+        const progress = (this.width * this.getProgressPercent()) / 2;
+
         // Place locator
-        // this.progressLocator.update(this.width * this.getProgressPercent());
-        // Check if wavebar should change color
-        for (let i = 0; i < this.bars.length; i++) {
-          const progress = (this.width * this.getProgressPercent()) / 2;
-          if (!this.bars[i].played && this.bars[i].x < progress) {
-            this.bars[i].played = true;
-            this.bars[i].draw();
-          } else if (this.bars[i].played && this.bars[i].x > progress) {
-            this.bars[i].played = false;
-            this.bars[i].draw();
-          }
-        }
+        this.locator.tick(this.width * this.getProgressPercent());
+
+        // Check if bars should change color
+        this.bars.forEach(bar => bar.tick(progress));
+
         // Look for eventsFired when clip finished
         if (this.getProgressPercent() > 0.99999) {
           this.setStartTime();
