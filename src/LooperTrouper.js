@@ -32,7 +32,7 @@ export default class LooperTrouper {
   /** @property {Bars} bars PIXI.Graphics of wave bars*/
 
   constructor(view, width, height, looped) {
-    this.pixi = this.createPixi(view, width, height);
+    this.createPixi(view, width, height);
     this.audioContext = new window.AudioContext();
     this.state = PAUSED;
     this.startTime = this.audioContext.currentTime;
@@ -49,13 +49,24 @@ export default class LooperTrouper {
    * @param height height of the element
    */
   createPixi(view, width, height) {
-    return (this.pixi = new PIXI.Application({
+    this.pixi = this.pixi = new PIXI.Application({
       view: view,
       width: width,
       height: height,
       transparent: true,
       resolution: 2
-    }));
+    });
+
+    // Click event
+    this.pixi.renderer.plugins.interaction.on('pointerdown', event => {
+      // the position in percent
+      const position = event.data.global.x - this.locator.width / 2;
+      this.locator.moveTo(position);
+      const time = this.duration * (position / this.width);
+      this.resumeAt(time);
+      this.setStartTime(time);
+    });
+    this.createUpdateWaveform();
   }
 
   /**
@@ -70,7 +81,6 @@ export default class LooperTrouper {
     this.sampleRate = this.buffer.sampleRate;
     this.createSource();
     this.bars = this.createBars();
-    this.createUpdateWaveform();
   }
 
   loadBuffer(buffer) {
@@ -79,7 +89,6 @@ export default class LooperTrouper {
     this.sampleRate = this.buffer.sampleRate;
     this.createSource();
     this.bars = this.createBars();
-    this.createUpdateWaveform();
   }
 
   /**
@@ -178,6 +187,16 @@ export default class LooperTrouper {
     this.setStartTime(this.getProgressTime() + 5);
   }
 
+  /**
+   * plays audio from chosen point
+   * @param time the time to start from
+   */
+  resumeAt(time) {
+    this.disconnectSource();
+    this.createSource();
+    this.source.start(0, time);
+    this.setStartTime(time);
+  }
   /**
    * rewinds 5 seconds
    */
