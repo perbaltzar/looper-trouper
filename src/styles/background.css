@@ -8,10 +8,12 @@ main {
   justify-content: flex-start;
   flex-direction: column;
   padding: 15px 80px;
+  z-index: -2;
 }
 .handle {
   width: 85vw;
   display: flex;
+  z-index: -3;
 }
 
 .top-handle {
