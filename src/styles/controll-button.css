@@ -4,10 +4,10 @@
 }
 .controll-button {
   padding: 5px 10px;
-  background-color: blue;
+  background-color: rgb(61, 68, 89);
   margin: 5px;
   border-radius: 5px;
 }
 .controll-button:hover {
-  background-color: lightblue;
+  background-color: rgb(104, 110, 148);
 }
