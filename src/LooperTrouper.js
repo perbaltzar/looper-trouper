@@ -4,6 +4,7 @@ import getBPM from './utils/getBPM';
 import getPeaks from './utils/getPeaks';
 import Bar from './Bar';
 import ProgressLocator from './ProgressLocator';
+import Loop from './Loop';
 
 // Constant to prevent spellingmistakes
 const PLAYING = 'playing';
@@ -29,7 +30,8 @@ export default class LooperTrouper {
   /** @property {Number} lastBeat Index of last beat of suggested loop */
   /** @property {Boolean} looped if this is a loop */
   /** @property {ProgressLocator} locator PIXI.Sprite of progress*/
-  /** @property {Bars} bars PIXI.Graphics of wave bars*/
+  /** @property {Bar} bars PIXI.Graphics of wave bars*/
+  /** @property {Loop} loopGraphics PIXI.Graphics of loop*/
   /** @property {Boolean} doDraw redraw graphics once when true*/
 
   constructor(view, width, height, looped) {
@@ -41,6 +43,7 @@ export default class LooperTrouper {
     this.width = width;
     this.height = height;
     this.locator = new ProgressLocator(100, height, this.pixi.stage);
+    this.loopGraphics = new Loop(1, 100, height, this.pixi.stage);
     this.looped = looped || false;
     this.setStartTime(this.getNow());
   }
@@ -282,7 +285,17 @@ export default class LooperTrouper {
     if (this.isPlaying()) return this.getProgressPlayed() / this.duration;
     return this.getProgress() / this.duration;
   }
-
+  /**
+   * set coordinates of loop
+   * @param start loop start position x
+   * @param end loop end position x
+   */
+  setLoopGraphicsPosition(start, end) {
+    this.loopGraphics.start = start;
+    this.loopGraphics.end = end;
+    this.loopGraphics.draw();
+    console.log(this.loopGraphics);
+  }
   /**
    * return Bars based on peaks and width
    */
@@ -322,6 +335,9 @@ export default class LooperTrouper {
         if (this.getProgressPercent() > 0.99999) {
           this.setStartTime();
         }
+
+        this.loopGraphics.tick();
+
         if (this.reDraw) this.doDraw = false;
       }
     });
@@ -424,6 +440,7 @@ export default class LooperTrouper {
   suggestLoop(minimumDuration) {
     const firstBeat = this.findFirstBeat();
     const lastBeat = this.findLastBeat(minimumDuration);
+    this.setLoopGraphicsPosition(firstBeat, lastBeat);
     return { start: firstBeat, end: lastBeat };
   }
 }
