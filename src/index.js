@@ -4,6 +4,7 @@ import LooperTrouper from './LooperTrouper.js';
 import loadFile from './utils/loadFile.js';
 import validateFile from './utils/validateFile.js';
 import abba from './assets/abba.mp3';
+import lion from './assets/lion.mp3';
 
 const originalPlayPauseButton = document.querySelector('.original-play-pause');
 const originalForward = document.querySelector('.original-forward');
@@ -74,6 +75,7 @@ const loopTrouper = new LooperTrouper(
 //==============================================================
 originalPlayPauseButton.addEventListener('click', e => {
   originalTrouper.playPause();
+  if (loopTrouper.isPlaying()) loopTrouper.pause();
 });
 
 originalForward.addEventListener('click', e => {
@@ -87,6 +89,7 @@ originalBack.addEventListener('click', e => {
 //==============================================================
 loopPlayPauseButton.addEventListener('click', e => {
   loopTrouper.playPause();
+  if (originalTrouper.isPlaying()) originalTrouper.pause();
   console.log(loopTrouper);
 });
 
@@ -100,7 +103,8 @@ loopBack.addEventListener('click', e => {
 //==============================================================
 
 createLoop.addEventListener('click', e => {
-  const buffer = originalTrouper.exportLoop(5, 10);
+  const loop = originalTrouper.suggestLoop(12);
+  const buffer = originalTrouper.exportLoop(loop.start, loop.end);
   originalTrouper.pause();
   loopTrouper.setAudioBuffer(buffer);
   loopTrouper.loadBuffer(buffer);
