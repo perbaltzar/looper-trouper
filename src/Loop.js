@@ -11,10 +11,14 @@ class Loop extends PIXI.Graphics {
 
   draw() {
     this.beginFill(this.color);
-    this.drawRect(this.start, 0, this.end - this.start, 150);
+    this.drawRect(this.start, 0, this.end - this.start, this._height);
     this.endFill();
   }
   tick() {}
+
+  placeEnd(end) {
+    this.end = end;
+  }
 }
 
 export default Loop;
