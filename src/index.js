@@ -39,10 +39,11 @@ dropzone.addEventListener(
     e.stopPropagation();
     const file = e.dataTransfer.files;
     if (validateFile(file)) {
+      URL.createObjectURL(file[0]);
       dragCounter = 0;
       dropzone.classList.toggle('hidden');
       dropMessage.classList.add('hidden');
-      originalTrouper.loadAudio(lion);
+      originalTrouper.loadAudio(URL.createObjectURL(file[0]));
       originalTrouper.setFileInformation(file[0].name, file[0].size);
     }
   },
@@ -101,7 +102,15 @@ originalBack.addEventListener('click', e => {
   originalTrouper.backFive();
 });
 
-copyLoopButton.addEventListener('click', e => {});
+copyLoopButton.addEventListener('click', e => {
+  if (originalTrouper.hasLoop()) {
+    const copyLoop = originalTrouper.getLoopPosition();
+    const buffer = originalTrouper.exportLoop(copyLoop.start, copyLoop.end);
+    originalTrouper.pause();
+    loopTrouper.setAudioBuffer(buffer);
+    loopTrouper.loadBuffer(buffer);
+  }
+});
 
 //============================== LOOP CONTROLLERS ================================
 loopPlayPauseButton.addEventListener('click', e => {
@@ -127,6 +136,7 @@ createSmartLoop.addEventListener('click', e => {
 });
 
 lengthSlider.addEventListener('input', e => {
+  lengthSlider.max = originalTrouper.getDuration();
   minimumLoopLength = e.target.value;
   lengthDisplay.innerText = `Length: ${minimumLoopLength}`;
 });
