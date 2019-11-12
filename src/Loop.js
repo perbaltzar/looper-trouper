@@ -5,7 +5,7 @@ class Loop extends PIXI.Graphics {
     this.end = end;
     this.height = 150;
     this.parent = parent;
-    this.color = 0x99ff00;
+    this.color = 0xec417a;
     parent.addChild(this);
   }
 

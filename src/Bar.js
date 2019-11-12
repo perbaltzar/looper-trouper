@@ -5,7 +5,7 @@ class Bar extends PIXI.Graphics {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.color = 0x008800;
+    this.color = 0xc43f51;
     this.parent = parent;
     this.beginFill(this.color);
     this.drawRect(x, y, width, height);
@@ -15,7 +15,7 @@ class Bar extends PIXI.Graphics {
   }
 
   draw() {
-    this.color = this.played ? 0x000088 : 0x008800;
+    this.color = this.played ? 0x414141 : 0xc43f51;
     this.beginFill(this.color);
     this.drawRect(this.x, this.y, this.width, this.height);
     this.endFill();
