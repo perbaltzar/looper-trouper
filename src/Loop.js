@@ -10,6 +10,7 @@ class Loop extends PIXI.Graphics {
   }
 
   draw() {
+    this.clear();
     this.beginFill(this.color);
     this.drawRect(this.start, 0, this.end - this.start, this._height);
     this.endFill();
