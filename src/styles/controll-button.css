@@ -3,6 +3,7 @@
   justify-content: center;
   background: #dadd93;
   padding: 30px 50px;
+  z-index: 10;
 }
 .controll-button {
   margin: 0 8px;
@@ -14,6 +15,7 @@
   background-color: #ec417a;
   border-radius: 8px;
   border: none;
+  outline: none;
 }
 .controll-button:hover {
   background-color: #eab6cc;
