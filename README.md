@@ -22,7 +22,6 @@ A big chunk of help from to alot of people.
 - [ ] Visualization of BPM in side bar.
 - [ ] Loading Screen
 - [ ] Print out song information in side bar
-- [ ] Change position in canvas and play from there
 
 ### Effects
 
@@ -38,7 +37,6 @@ A big chunk of help from to alot of people.
 
 - [ ] Move loop when clicking on it
 - [ ] Move the sides of the loop
-- [ ] Controll buttons, Play, Pause, +/- 5 sec, Suggest Loop, Export Loop
 
 ### Extra
 
@@ -47,6 +45,8 @@ A big chunk of help from to alot of people.
 
 ## Done
 
+- [x] Controll buttons, Play, Pause, +/- 5 sec, Suggest Loop, Export Loop
+- [x] Change position in canvas and play from there
 - [x] Smart Loop visible in original wave form
 - [x] Print out song on canvas with peaks data
 - [x] Don't show original playing when it's not
