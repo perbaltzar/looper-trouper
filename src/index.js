@@ -5,7 +5,8 @@ import loadFile from './utils/loadFile.js';
 import validateFile from './utils/validateFile.js';
 import abba from './assets/abba.mp3';
 import lion from './assets/lion.mp3';
-
+import turnOffDiodes from './utils/turnOffDiodes';
+const orgPlayDiode = document.querySelector('.org-play-diode');
 const originalPlayPauseButton = document.querySelector('.original-play-pause');
 const originalForward = document.querySelector('.original-forward');
 const originalBack = document.querySelector('.original-back');
@@ -16,6 +17,7 @@ const dropzone = document.querySelector('.drop-zone');
 const dropMessage = document.querySelector('.drop-message');
 const createLoop = document.querySelector('.create-loop');
 let dragCounter = 0;
+const diodes = document.querySelectorAll('.diode');
 
 dropzone.addEventListener(
   'drop',
@@ -75,6 +77,11 @@ const loopTrouper = new LooperTrouper(
 //==============================================================
 originalPlayPauseButton.addEventListener('click', e => {
   originalTrouper.playPause();
+  turnOffDiodes(diodes);
+  if (originalTrouper.isPlaying()) {
+    orgPlayDiode.classList.add('glowing');
+  }
+
   if (loopTrouper.isPlaying()) loopTrouper.pause();
 });
 
@@ -90,7 +97,6 @@ originalBack.addEventListener('click', e => {
 loopPlayPauseButton.addEventListener('click', e => {
   loopTrouper.playPause();
   if (originalTrouper.isPlaying()) originalTrouper.pause();
-  console.log(loopTrouper);
 });
 
 loopForward.addEventListener('click', e => {

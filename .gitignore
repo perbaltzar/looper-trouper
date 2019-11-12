@@ -4,4 +4,5 @@ dist
 
 yarn-error.log
 
-src/assets/
+src/assets/abba.mp3
+src/assets/lion.mp3

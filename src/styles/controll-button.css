@@ -1,13 +1,36 @@
 .controll-buttons {
   display: flex;
   justify-content: center;
+  background: #dadd93;
+  padding: 30px 50px;
+  z-index: 10;
 }
 .controll-button {
-  padding: 5px 10px;
-  background-color: rgb(61, 68, 89);
-  margin: 5px;
-  border-radius: 5px;
+  margin: 0 8px;
+  height: 60px;
+  width: 50px;
+  padding: 5px 0;
+  background-color: #ec417a;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 .controll-button:hover {
-  background-color: rgb(104, 110, 148);
+  background-color: #eab6cc;
+}
+
+.diode {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background-color: #959394;
+}
+
+.glowing {
+  background: radial-gradient(#99c3eb, #2b86da);
+  box-shadow: 0 0 2px 3px #fff, 0 0 3px 1px #0ff;
 }

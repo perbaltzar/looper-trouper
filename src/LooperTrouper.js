@@ -4,6 +4,7 @@ import getBPM from './utils/getBPM';
 import getPeaks from './utils/getPeaks';
 import Bar from './Bar';
 import ProgressLocator from './ProgressLocator';
+import Loop from './Loop';
 
 // Constant to prevent spellingmistakes
 const PLAYING = 'playing';
@@ -28,9 +29,11 @@ export default class LooperTrouper {
   /** @property {Number} firstBeat Index of first beat of suggested loop */
   /** @property {Number} lastBeat Index of last beat of suggested loop */
   /** @property {Boolean} looped if this is a loop */
-  /** @property {ProgressLocator} locator PIXI.Sprite of progress*/
-  /** @property {Bars} bars PIXI.Graphics of wave bars*/
-  /** @property {Boolean} doDraw redraw graphics once when true*/
+  /** @property {ProgressLocator} locator PIXI.Sprite of progress */
+  /** @property {Bar} bars PIXI.Graphics of wave bars */
+  /** @property {Loop} loopGraphics PIXI.Graphics of loop */
+  /** @property {Boolean} doDraw redraw graphics once when true */
+  /** @property {Boolean} placingLoop true if user is placing loop */
 
   constructor(view, width, height, looped) {
     this.progress = 0;
@@ -41,7 +44,9 @@ export default class LooperTrouper {
     this.width = width;
     this.height = height;
     this.locator = new ProgressLocator(100, height, this.pixi.stage);
+    this.loopGraphics = new Loop(1, 100, height, this.pixi.stage);
     this.looped = looped || false;
+    this.placingLoop = false;
     this.setStartTime(this.getNow());
   }
 
@@ -63,11 +68,19 @@ export default class LooperTrouper {
     // Click event
     this.pixi.renderer.plugins.interaction.on('pointerdown', event => {
       // the position in percent
-      const position = event.data.global.x - this.locator.width / 2;
-      this.locator.moveTo(position);
-      const time = this.duration * (position / this.width);
-      this.seekTo(time);
-      this.setStartTime(time);
+      const { x, y } = event.data.global;
+
+      if (this.placingLoop) {
+        this.placingLoop = false;
+        return;
+      }
+      if (y > 30 && !this.placingLoop) {
+        this.changeLocatorPosition(x);
+      }
+      if (y < 30 && !this.placingLoop) {
+        this.loopGraphics.start = x;
+        this.placingLoop = true;
+      }
     });
     this.createUpdateWaveform();
   }
@@ -282,6 +295,36 @@ export default class LooperTrouper {
     if (this.isPlaying()) return this.getProgressPlayed() / this.duration;
     return this.getProgress() / this.duration;
   }
+  /**
+   * set coordinates of loop
+   * @param start loop start position x
+   * @param end loop end position x
+   */
+  setLoopGraphicsPosition(start, end) {
+    this.loopGraphics.start = start;
+    this.loopGraphics.end = end;
+    this.loopGraphics.draw();
+    console.log(this.loopGraphics);
+  }
+
+  /**
+   * ? Click Event
+   * Changes position of the locator and plays from there if is playing
+   * @param x the X position
+   */
+  changeLocatorPosition(x) {
+    const position = x - this.locator.width / 2;
+    this.locator.moveTo(position);
+    const time = this.duration * (position / this.width);
+    this.seekTo(time);
+    this.setStartTime(time);
+  }
+
+  /**
+   * ? Click Event
+   * placing the loop
+   * @param myParam explain the param
+   */
 
   /**
    * return Bars based on peaks and width
@@ -312,9 +355,6 @@ export default class LooperTrouper {
         // Get progress
         const progress = (this.width * this.getProgressPercent()) / 2;
 
-        // Place locator
-        this.locator.tick(this.width * this.getProgressPercent());
-
         // Check if bars should change color
         this.bars.forEach(bar => bar.tick(progress));
 
@@ -322,7 +362,21 @@ export default class LooperTrouper {
         if (this.getProgressPercent() > 0.99999) {
           this.setStartTime();
         }
+
+        // Place locator
+        this.locator.tick(this.width * this.getProgressPercent());
+
+        // Place Loop
+        if (this.placingLoop) {
+        }
+
         if (this.reDraw) this.doDraw = false;
+      }
+      if (this.placingLoop) {
+        const mouseX = this.pixi.renderer.plugins.interaction.mouse.global.x;
+
+        this.loopGraphics.placeEnd(mouseX);
+        this.loopGraphics.draw();
       }
     });
   }
@@ -424,6 +478,9 @@ export default class LooperTrouper {
   suggestLoop(minimumDuration) {
     const firstBeat = this.findFirstBeat();
     const lastBeat = this.findLastBeat(minimumDuration);
+    const start = (firstBeat / this.duration) * this.width;
+    const end = (lastBeat / this.duration) * this.width;
+    this.setLoopGraphicsPosition(start, end);
     return { start: firstBeat, end: lastBeat };
   }
 }

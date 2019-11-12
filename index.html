@@ -4,11 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
     <link
-      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      href="https://fonts.googleapis.com/css?family=Michroma&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="src/styles/index.css" />
+    <link rel="stylesheet" type="text/css" href="src/styles/logo.css" />
+    <link rel="stylesheet" type="text/css" href="src/styles/speakers.css" />
+    <link rel="stylesheet" type="text/css" href="src/styles/background.css" />
     <link rel="stylesheet" type="text/css" href="src/styles/dropzone.css" />
     <link rel="stylesheet" type="text/css" href="src/styles/dropin.css" />
     <link
@@ -19,35 +23,99 @@
     <title>Looper Trouper</title>
   </head>
   <body>
-    <div class="drop-zone">
+    <!-- <div class="drop-zone">
       <h3 class="drop-message hidden">Drop your file to load it</h3>
-    </div>
+    </div> -->
     <div class="drop-in">
-      <button class="drop-in-button">X</button>
+      <button class="drop-in-button"><img class="arrow-icon" src="src/assets/icons/arrow.svg" /></button>
+      <div class="drop-in-container">
+        <h2>Song Info</h2>
+        <p>Name:</p>
+        <p>Duration:</p>
+        <p>Bpm:</p>
+        <h2>Loop</h2>
+        <p>Start:</p>
+        <p>End:</p>
+        <h3>Equalizer</h3>
+        <form class="equalizer">
+          <div class="eq-sliders-containter">
+            <input id="60hz" class="eq-slider" type="range"> </input>
+            <input id="240hz" class="eq-slider" type="range"></input>
+            <input id="1000hz" class="eq-slider" type="range"></input>
+            <input id="3500hz" class="eq-slider" type="range"></input>
+            <input id="15000hz" class="eq-slider" type="range"></input>
+          </div>
+          <div class="eq-labels-container"> 
+            <label for="60hz">60Hz</label>
+            <label for="240hz">240Hz</label>
+            <label for="1000hz">1kHz</label>
+            <label for="3500hz">3.5kHz</label>
+            <label for="15000hz">15kHz</label>
+          </div>
+        </form>
+      </div>
     </div>
-    <h1>LOOPER TROUPER</h1>
+    <div class="handle">
+      <div class="left-handle"></div>
+      <div class="top-handle"></div>
+      <div class="right-handle"></div>
+    </div>
     <main>
-      <section>
-        <h2>ORIGINAL</h2>
-        <canvas id="original"></canvas>
-        <div class="controll-buttons">
-          <button class="controll-button original-back">-5</button>
-          <button class="controll-button original-play-pause">
-            PLAY/PAUSE
-          </button>
-          <button class="controll-button original-forward">+5</button>
-          <button class="controll-button create-loop">Create Loop</button>
+      <div class="speaker-container">
+        <div class="speaker speaker-left">
+          <div class="woofer">
+            <div class="red-woofer"></div>
+            <div class="black-woofer"></div>
+          </div>
         </div>
-      </section>
-      <section>
-        <h2>LOOP</h2>
-        <canvas id="loop"></canvas>
-        <div class="controll-buttons">
-          <button class="controll-button loop-back">-5</button>
-          <button class="controll-button loop-play-pause">PLAY/PAUSE</button>
-          <button class="controll-button loop-forward">+5</button>
+        <div class="speaker speaker-right">
+          <div class="woofer">
+            <div class="red-woofer"></div>
+            <div class="black-woofer"></div>
+          </div>
         </div>
-      </section>
+      </div>
+      <div class="logo-container">
+        <h1>LOOPER TROUPER</h1>
+        <span class="circle circle1"></span>
+        <span class="circle circle2"> </span>
+        <span class="circle circle3"> </span>
+        <span class="circle circle4"> </span>
+      </div>
+
+      <canvas id="original"></canvas>
+      <div class="controll-buttons">
+        <button class="controll-button original-back">
+          <img src="src/assets/icons/backwards.svg" />
+          <span class="diode"></span>
+        </button>
+        <button class="controll-button original-play-pause">
+          <img src="src/assets/icons/play.svg" />
+          <span class="diode org-play-diode"></span>
+        </button>
+        <button class="controll-button original-forward">
+          <img src="src/assets/icons/fastforward.svg" />
+          <span class="diode"></span>
+        </button>
+        <button class="controll-button create-loop"></button>
+      </div>
+
+      <canvas id="loop"></canvas>
+      <div class="controll-buttons">
+        <button class="controll-button loop-back">
+          <img src="src/assets/icons/backwards.svg" />
+          <span class="diode"></span>
+        </button>
+        <button class="controll-button loop-play-pause">
+          <img src="src/assets/icons/play.svg" />
+          <span class="diode"></span>
+        </button>
+        <button class="controll-button loop-forward">
+          <img src="src/assets/icons/fastforward.svg" />
+          <span class="diode"></span>
+        </button>
+        <button class="controll-button save-loop"></button>
+      </div>
     </main>
 
     <script src="https://unpkg.com/mitt/dist/mitt.umd.js"></script>
