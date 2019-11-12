@@ -1,5 +1,6 @@
 import 'regenerator-runtime/runtime';
 import * as PIXI from 'pixi.js';
+import mitt from 'mitt';
 import LooperTrouper from './LooperTrouper.js';
 import loadFile from './utils/loadFile.js';
 import validateFile from './utils/validateFile.js';
@@ -7,16 +8,35 @@ import abba from './assets/abba.mp3';
 import lion from './assets/lion.mp3';
 import turnOffDiodes from './utils/turnOffDiodes';
 
+//============ EMITTER ======= //
+const emitter = mitt();
+
+//========== CANVAS =========//
+const originalCanvas = document.querySelector('#original');
+const loopCanvas = document.querySelector('#loop');
+
+//=========================== SONG INFO =======================//
+const songName = document.querySelector('.song-name');
+const songDuration = document.querySelector('.song-duration');
+const songBpm = document.querySelector('.song-bpm');
+const loopStart = document.querySelector('.loop-start');
+const loopEnd = document.querySelector('.loop-end');
+const loopDuration = document.querySelector('.loop-duration');
+
 // ========== BUTTONS ================//
+// original buttons
 const originalPlayPauseButton = document.querySelector('.original-play-pause');
 const originalForward = document.querySelector('.original-forward');
 const originalBack = document.querySelector('.original-back');
+const copyLoopButton = document.querySelector('.org-copy-loop');
+// Loop buttons
 const loopPlayPauseButton = document.querySelector('.loop-play-pause');
 const loopForward = document.querySelector('.loop-forward');
 const loopBack = document.querySelector('.loop-back');
 
+// Drop in buttons
 const createSmartLoop = document.querySelector('.smart-loop');
-const copyLoopButton = document.querySelector('.org-copy-loop');
+
 //=========== DIODES =================//
 const orgPlayDiode = document.querySelector('.org-play-diode');
 
@@ -29,8 +49,38 @@ const dropMessage = document.querySelector('.drop-message');
 let dragCounter = 0;
 const diodes = document.querySelectorAll('.diode');
 
-//============== VARIABLES =============//**
+//============== VARIABLES =============//
 let minimumLoopLength = 5;
+let songInformation, loopInformation;
+
+//=========== LOOPER TROUPER ===========//
+const originalTrouper = new LooperTrouper(
+  originalCanvas,
+  originalCanvas.width,
+  originalCanvas.height,
+  false,
+  emitter,
+);
+const loopTrouper = new LooperTrouper(
+  loopCanvas,
+  loopCanvas.width,
+  loopCanvas.height,
+  true,
+  emitter,
+);
+
+//================= EMITTER EVENTS ============//
+emitter.on('loaded', () => {
+  songInformation = originalTrouper.getFileInformation();
+  loopInformation = loopTrouper.getFileInformation();
+  songName.innerText = `Name: ${songInformation.name}`;
+  songBpm.innerText = `Name: ${songInformation.bpm}`;
+  songDuration.innerText = `Name: ${songInformation.duration}`;
+  loopInformation.loop = originalTrouper.getLoopPosition();
+  loopStart.innerText = `Start: ${loopInformation.loop.start}`;
+  loopEnd.innerText = `End: ${loopInformation.loop.end}`;
+  loopDuration.innerText = `Duration: ${loopInformation.loop.end - loopInformation.loop.start} `;
+});
 
 dropzone.addEventListener(
   'drop',
@@ -72,16 +122,6 @@ dropzone.addEventListener('dragover', e => {
   e.preventDefault();
   e.stopPropagation();
 });
-
-const originalCanvas = document.querySelector('#original');
-const loopCanvas = document.querySelector('#loop');
-
-const originalTrouper = new LooperTrouper(
-  originalCanvas,
-  originalCanvas.width,
-  originalCanvas.height,
-);
-const loopTrouper = new LooperTrouper(loopCanvas, loopCanvas.width, loopCanvas.height, true);
 
 //============================ ORIGINAL CONTROLLER =================================
 originalPlayPauseButton.addEventListener('click', e => {
