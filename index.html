@@ -23,9 +23,9 @@
     <title>Looper Trouper</title>
   </head>
   <body>
-    <!-- <div class="drop-zone">
+    <div class="drop-zone">
       <h3 class="drop-message hidden">Drop your file to load it</h3>
-    </div> -->
+    </div>
     <div class="drop-in">
       <button class="drop-in-button"><img class="arrow-icon" src="src/assets/icons/arrow.svg" /></button>
       <div class="drop-in-container">
@@ -53,6 +53,8 @@
             <label for="15000hz">15kHz</label>
           </div>
         </form>
+        <h3>Smart Loop</h3>
+        <div class="controll-button smart-loop"></div>
       </div>
     </div>
     <div class="handle">
@@ -97,7 +99,13 @@
           <img src="src/assets/icons/fastforward.svg" />
           <span class="diode"></span>
         </button>
-        <button class="controll-button create-loop"></button>
+        <button class="controll-button create-loop">
+          <img src="src/assets/icons/loop.svg" />
+          <span class="diode"></span>
+        </button>
+        <button class="controll-button create-loop">
+          <img src="src/assets/icons/copy.svg" />
+        </button>
       </div>
 
       <canvas id="loop"></canvas>
@@ -114,7 +122,13 @@
           <img src="src/assets/icons/fastforward.svg" />
           <span class="diode"></span>
         </button>
-        <button class="controll-button save-loop"></button>
+        <button class="controll-button save-loop">
+          <img src="src/assets/icons/loop.svg" />
+          <span class="diode"></span>
+        </button>
+        <button class="controll-button save-loop">
+          <img src="src/assets/icons/download.svg" />
+        </button>
       </div>
     </main>
 
