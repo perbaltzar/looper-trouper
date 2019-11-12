@@ -90,7 +90,6 @@ originalBack.addEventListener('click', e => {
 loopPlayPauseButton.addEventListener('click', e => {
   loopTrouper.playPause();
   if (originalTrouper.isPlaying()) originalTrouper.pause();
-  console.log(loopTrouper);
 });
 
 loopForward.addEventListener('click', e => {
