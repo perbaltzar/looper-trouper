@@ -24,7 +24,7 @@
   </head>
   <body>
     <div class="drop-zone">
-      <h3 class="drop-message hidden">Drop your file to load it</h3>
+      <h5 class="drop-message hidden">Drop your file to load it</h5>
     </div>
     <div class="drop-in">
       <button class="drop-in-button"><img class="arrow-icon" src="src/assets/icons/arrow.svg" /></button>
@@ -39,11 +39,11 @@
         <h3>Equalizer</h3>
         <form class="equalizer">
           <div class="eq-sliders-containter">
-            <input id="60hz" class="eq-slider" type="range"> </input>
-            <input id="240hz" class="eq-slider" type="range"></input>
-            <input id="1000hz" class="eq-slider" type="range"></input>
-            <input id="3500hz" class="eq-slider" type="range"></input>
-            <input id="15000hz" class="eq-slider" type="range"></input>
+            <input id="60hz" class="eq-slider slider" type="range"> </input>
+            <input id="240hz" class="eq-slider slider" type="range"></input>
+            <input id="1000hz" class="eq-slider slider" type="range"></input>
+            <input id="3500hz" class="eq-slider slider" type="range"></input>
+            <input id="15000hz" class="eq-slider slider" type="range"></input>
           </div>
           <div class="eq-labels-container"> 
             <label for="60hz">60Hz</label>
@@ -54,7 +54,11 @@
           </div>
         </form>
         <h3>Smart Loop</h3>
-        <div class="controll-button smart-loop"></div>
+        <button class="controll-button smart-loop"></button>
+        <form>
+          <input id="length-slider" class="slider" type="range" min="1" max="100"> </input>
+        </form>
+        <p class="minimun-length-display">Length: </p>
       </div>
     </div>
     <div class="handle">
@@ -99,11 +103,11 @@
           <img src="src/assets/icons/fastforward.svg" />
           <span class="diode"></span>
         </button>
-        <button class="controll-button create-loop">
+        <button class="controll-button org-loop">
           <img src="src/assets/icons/loop.svg" />
           <span class="diode"></span>
         </button>
-        <button class="controll-button create-loop">
+        <button class="controll-button org-copy-loop">
           <img src="src/assets/icons/copy.svg" />
         </button>
       </div>

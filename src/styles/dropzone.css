@@ -2,10 +2,10 @@
   position: absolute;
   width: 100vw;
   height: 100vh;
-  z-index: 20;
+  z-index: 30;
   display: flex;
+  padding-top: 100px;
   justify-content: center;
-  align-items: center;
 }
 .hidden {
   display: none;
@@ -13,4 +13,9 @@
 
 .highlight {
   background-color: #00000055;
+}
+
+.drop-message {
+  font-size: 40px;
+  color: white;
 }

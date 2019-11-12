@@ -6,18 +6,31 @@ import validateFile from "./utils/validateFile.js";
 import abba from "./assets/abba.mp3";
 import lion from "./assets/lion.mp3";
 import turnOffDiodes from "./utils/turnOffDiodes";
-const orgPlayDiode = document.querySelector(".org-play-diode");
+
+// ========== BUTTONS ================//
 const originalPlayPauseButton = document.querySelector(".original-play-pause");
 const originalForward = document.querySelector(".original-forward");
 const originalBack = document.querySelector(".original-back");
 const loopPlayPauseButton = document.querySelector(".loop-play-pause");
 const loopForward = document.querySelector(".loop-forward");
 const loopBack = document.querySelector(".loop-back");
+
+const createSmartLoop = document.querySelector(".smart-loop");
+const copyLoopButton = document.querySelector(".org-copy-loop");
+//=========== DIODES =================//
+const orgPlayDiode = document.querySelector(".org-play-diode");
+
+//=========== SLIDERS =================//
+const lengthSlider = document.querySelector("#length-slider");
+const lengthDisplay = document.querySelector(".minimun-length-display");
 const dropzone = document.querySelector(".drop-zone");
 const dropMessage = document.querySelector(".drop-message");
-const createLoop = document.querySelector(".smart-loop");
+
 let dragCounter = 0;
 const diodes = document.querySelectorAll(".diode");
+
+//============== VARIABLES =============//**
+let minimumLoopLength = 5;
 
 dropzone.addEventListener(
   "drop",
@@ -74,7 +87,7 @@ const loopTrouper = new LooperTrouper(
   true
 );
 
-//==============================================================
+//============================ ORIGINAL CONTROLLER =================================
 originalPlayPauseButton.addEventListener("click", e => {
   originalTrouper.playPause();
   turnOffDiodes(diodes);
@@ -93,7 +106,9 @@ originalBack.addEventListener("click", e => {
   originalTrouper.backFive();
 });
 
-//==============================================================
+copyLoopButton.addEventListener("click", e => {});
+
+//============================== LOOP CONTROLLERS ================================
 loopPlayPauseButton.addEventListener("click", e => {
   loopTrouper.playPause();
   if (originalTrouper.isPlaying()) originalTrouper.pause();
@@ -106,12 +121,17 @@ loopForward.addEventListener("click", e => {
 loopBack.addEventListener("click", e => {
   loopTrouper.backFive();
 });
-//==============================================================
+//========================= EXPORT LOOP =====================================
 
-createLoop.addEventListener("click", e => {
-  const loop = originalTrouper.suggestLoop(12);
+createSmartLoop.addEventListener("click", e => {
+  const loop = originalTrouper.suggestLoop(minimumLoopLength);
   const buffer = originalTrouper.exportLoop(loop.start, loop.end);
   originalTrouper.pause();
   loopTrouper.setAudioBuffer(buffer);
   loopTrouper.loadBuffer(buffer);
+});
+
+lengthSlider.addEventListener("input", e => {
+  minimumLoopLength = e.target.value;
+  lengthDisplay.innerText = `Length: ${minimumLoopLength}`;
 });
