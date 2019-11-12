@@ -1,6 +1,6 @@
 const turnOffDiodes = diodes => {
   diodes.forEach(diode => {
-    if (diode.classList.contains('active')) diode.classList.remove('active');
+    if (diode.classList.contains('glowing')) diode.classList.remove('glowing');
   });
 };
 

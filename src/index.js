@@ -79,7 +79,7 @@ originalPlayPauseButton.addEventListener('click', e => {
   originalTrouper.playPause();
   turnOffDiodes(diodes);
   if (originalTrouper.isPlaying()) {
-    orgPlayDiode.classList.add('active');
+    orgPlayDiode.classList.add('glowing');
   }
 
   if (loopTrouper.isPlaying()) loopTrouper.pause();
