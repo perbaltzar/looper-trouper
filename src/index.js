@@ -7,6 +7,7 @@ import validateFile from './utils/validateFile.js';
 import abba from './assets/abba.mp3';
 import lion from './assets/lion.mp3';
 import turnOffDiodes from './utils/turnOffDiodes';
+import getReadableTime from './utils/getReadableTime';
 
 //============ EMITTER ======= //
 const emitter = mitt();
@@ -74,12 +75,14 @@ emitter.on('loaded', () => {
   songInformation = originalTrouper.getFileInformation();
   loopInformation = loopTrouper.getFileInformation();
   songName.innerText = `Name: ${songInformation.name}`;
-  songBpm.innerText = `Name: ${songInformation.bpm}`;
-  songDuration.innerText = `Name: ${songInformation.duration}`;
+  songBpm.innerText = `Bpm: ${songInformation.bpm}`;
+  songDuration.innerText = `Duration: ${getReadableTime(songInformation.duration)}`;
   loopInformation.loop = originalTrouper.getLoopPosition();
-  loopStart.innerText = `Start: ${loopInformation.loop.start}`;
-  loopEnd.innerText = `End: ${loopInformation.loop.end}`;
-  loopDuration.innerText = `Duration: ${loopInformation.loop.end - loopInformation.loop.start} `;
+  loopStart.innerText = `Start: ${getReadableTime(loopInformation.loop.start)}`;
+  loopEnd.innerText = `End: ${getReadableTime(loopInformation.loop.end)}`;
+  loopDuration.innerText = `Duration: ${getReadableTime(
+    loopInformation.loop.end - loopInformation.loop.start,
+  )} `;
 });
 
 dropzone.addEventListener(
