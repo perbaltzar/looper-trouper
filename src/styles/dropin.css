@@ -10,13 +10,40 @@
   right: -470px;
 }
 
-.drop-in button {
+.drop-in-button {
   border: none;
   height: 100vh;
   width: 30px;
   background-color: #9ccc65;
   outline: none;
+  animation: none;
 }
+.drop-in-button:hover {
+  cursor: pointer;
+}
+
+.drop-in-animation {
+  animation: arrow 3s infinite;
+}
+
+@keyframes arrow {
+  0% {
+    transform: translateX(0px);
+  }
+  5% {
+    transform: translateX(-5px);
+  }
+  10% {
+    transform: translateX(0px);
+  }
+  15% {
+    transform: translateX(-5px);
+  }
+  20% {
+    transform: translateX(0px);
+  }
+}
+
 .active {
   right: -30px;
 }
