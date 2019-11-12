@@ -2,7 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: 'Michroma', sans-serif;
+  font-family: "Michroma", sans-serif;
 }
 
 body {
@@ -22,4 +22,8 @@ canvas {
   border-radius: 5px;
   overflow: hidden;
   z-index: 10;
+}
+
+button:hover {
+  cursor: pointer;
 }
