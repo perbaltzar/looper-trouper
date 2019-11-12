@@ -62,10 +62,10 @@ export default class LooperTrouper {
       width: width,
       height: height,
       transparent: true,
-      resolution: 2
+      resolution: 2,
     });
 
-    // Click event
+    // ? Click event
     this.pixi.renderer.plugins.interaction.on('pointerdown', event => {
       // the position in percent
       const { x, y } = event.data.global;
@@ -82,6 +82,12 @@ export default class LooperTrouper {
         this.placingLoop = true;
       }
     });
+
+    this.pixi.renderer.plugins.interaction.on('pointerup', event => {
+      if (this.placingLoop) {
+        this.placingLoop = false;
+      }
+    });
     this.createUpdateWaveform();
   }
 
@@ -89,7 +95,13 @@ export default class LooperTrouper {
    * load audio buffer and get all data we need
    * @param url Url to audio file
    */
+
   async loadAudio(url) {
+    if (this.isPlaying()) {
+      this.pause();
+
+      this.disconnectSource();
+    }
     this.buffer = await createAudioBuffer(this.audioContext, url);
     this.bpm = await getBPM(url);
     this.peaks = getPeaks(this.buffer, 300);
@@ -100,6 +112,9 @@ export default class LooperTrouper {
   }
 
   loadBuffer(buffer) {
+    if (this.isPlaying()) {
+      this.reset();
+    }
     this.peaks = getPeaks(buffer, 300);
     this.duration = this.buffer.duration;
     this.sampleRate = this.buffer.sampleRate;
@@ -115,6 +130,10 @@ export default class LooperTrouper {
   setFileInformation(name, size) {
     this.name = name;
     this.size = size;
+  }
+
+  getDuration() {
+    return this.duration;
   }
 
   /**
@@ -404,7 +423,7 @@ export default class LooperTrouper {
     const copy = this.audioContext.createBuffer(
       this.buffer.numberOfChannels,
       loopDuration,
-      this.sampleRate
+      this.sampleRate,
     );
 
     for (let i = 0; i < this.buffer.numberOfChannels; i++) {
@@ -482,5 +501,17 @@ export default class LooperTrouper {
     const end = (lastBeat / this.duration) * this.width;
     this.setLoopGraphicsPosition(start, end);
     return { start: firstBeat, end: lastBeat };
+  }
+
+  /**
+   * reset all variables
+   */
+  reset() {
+    this.disconnectSource();
+    this.pause();
+    this.state = PAUSED;
+    this.bars.forEach(bar => {
+      bar.clear();
+    });
   }
 }
