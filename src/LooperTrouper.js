@@ -37,6 +37,7 @@ export default class LooperTrouper {
   /** @property {Number} loopStart time where loop start */
   /** @property {Number} loopEnd time where loop end */
   /** @property {mitt} emitter emitt events */
+  /** @property {Boolean} isLooped if player should played the selected loop */
 
   constructor(view, width, height, looped, emitter) {
     this.progress = 0;
@@ -264,8 +265,21 @@ export default class LooperTrouper {
     } else {
       this.setProgress(this.getProgress() - 5);
     }
-    console.log(this.getProgress());
     this.reDraw();
+  }
+
+  /**
+   * toggle playing loop on and off
+   */
+  toogleLoop() {
+    this.isLooped = !this.isLooped;
+  }
+
+  /**
+   * return if the loop is playing
+   */
+  isLooped() {
+    return this.isLooped;
   }
 
   /**
@@ -510,7 +524,6 @@ export default class LooperTrouper {
    * @param minimumDuration minimum number of seconds the loop can be
    */
   findLastBeat(minimumDuration) {
-    console.log(this.bpm);
     const secondsPerBeat = 60 / this.bpm;
     let lastBeat = 0;
     for (let i = 1; lastBeat - this.firstBeat < minimumDuration; i++) {
