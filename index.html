@@ -14,12 +14,12 @@
     <link rel="stylesheet" type="text/css" href="src/styles/speakers.css" />
     <link rel="stylesheet" type="text/css" href="src/styles/background.css" />
     <link rel="stylesheet" type="text/css" href="src/styles/dropzone.css" />
-    <link rel="stylesheet" type="text/css" href="src/styles/dropin.css" />
     <link
-      rel="stylesheet"
-      type="text/css"
-      href="src/styles/controll-button.css"
+    rel="stylesheet"
+    type="text/css"
+    href="src/styles/controll-button.css"
     />
+    <link rel="stylesheet" type="text/css" href="src/styles/dropin.css" />
     <title>Looper Trouper</title>
   </head>
   <body>
@@ -30,12 +30,13 @@
       <button class="drop-in-button"><img class="arrow-icon" src="src/assets/icons/arrow.svg" /></button>
       <div class="drop-in-container">
         <h2>Song Info</h2>
-        <p>Name:</p>
-        <p>Duration:</p>
-        <p>Bpm:</p>
+        <p class="song-name">Name:</p>
+        <p class="song-duration">Duration:</p>
+        <p class="song-bpm">Bpm:</p>
         <h2>Loop</h2>
-        <p>Start:</p>
-        <p>End:</p>
+        <p class="loop-start">Start:</p>
+        <p class="loop-end">End:</p>
+        <p class="loop-duration">Duration:</p>
         <h3>Equalizer</h3>
         <form class="equalizer">
           <div class="eq-sliders-containter">
@@ -54,11 +55,14 @@
           </div>
         </form>
         <h3>Smart Loop</h3>
-        <button class="controll-button smart-loop"></button>
-        <form>
-          <input id="length-slider" class="slider" type="range" min="1" max="100"> </input>
-        </form>
-        <p class="minimun-length-display">Length: </p>
+        <div class="smart-loop-container">
+          <div>
+            <input id="length-slider" class="slider" type="range" min="1" max="100"> </input>
+            <p class="minimun-length-display">Length: </p>
+          </div>
+          <button class="smart-loop-button">Get Smart Loop</button>
+        </div>
+        
       </div>
     </div>
     <div class="handle">

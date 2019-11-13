@@ -36,8 +36,9 @@ export default class LooperTrouper {
   /** @property {Boolean} placingLoop true if user is placing loop */
   /** @property {Number} loopStart time where loop start */
   /** @property {Number} loopEnd time where loop end */
+  /** @property {mitt} emitter emitt events */
 
-  constructor(view, width, height, looped) {
+  constructor(view, width, height, looped, emitter) {
     this.progress = 0;
     this.doDraw = false;
     this.createPixi(view, width, height);
@@ -51,6 +52,7 @@ export default class LooperTrouper {
     this.placingLoop = false;
     this.loopStart = null;
     this.loopEnd = null;
+    this.emitter = emitter;
     this.setStartTime(this.getNow());
   }
 
@@ -112,6 +114,7 @@ export default class LooperTrouper {
     this.sampleRate = this.buffer.sampleRate;
     this.createSource();
     this.bars = this.createBars();
+    this.fireEvent('loaded');
   }
 
   loadBuffer(buffer) {
@@ -121,6 +124,7 @@ export default class LooperTrouper {
     this.sampleRate = this.buffer.sampleRate;
     this.createSource();
     this.bars = this.createBars();
+    this.fireEvent('loaded');
   }
 
   /**
@@ -131,6 +135,14 @@ export default class LooperTrouper {
   setFileInformation(name, size) {
     this.name = name;
     this.size = size;
+  }
+
+  getFileInformation() {
+    return {
+      name: this.name,
+      duration: this.duration,
+      bpm: this.bpm,
+    };
   }
 
   getDuration() {
@@ -518,6 +530,14 @@ export default class LooperTrouper {
     const end = (lastBeat / this.duration) * this.width;
     this.setLoopGraphicsPosition(start, end);
     return { start: firstBeat, end: lastBeat };
+  }
+
+  /**
+   * fire an event
+   * @param event name of event to be fire
+   */
+  fireEvent(event) {
+    this.emitter.emit(event);
   }
 
   /**
