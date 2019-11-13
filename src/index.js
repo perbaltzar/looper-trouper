@@ -6,7 +6,6 @@ import loadFile from './utils/loadFile.js';
 import validateFile from './utils/validateFile.js';
 import abba from './assets/abba.mp3';
 import lion from './assets/lion.mp3';
-import turnOffDiodes from './utils/turnOffDiodes';
 import getReadableTime from './utils/getReadableTime';
 
 //============ EMITTER ======= //
@@ -26,20 +25,30 @@ const loopDuration = document.querySelector('.loop-duration');
 
 // ========== BUTTONS ================//
 // original buttons
+const originalBackward = document.querySelector('.original-back');
 const originalPlayPauseButton = document.querySelector('.original-play-pause');
 const originalForward = document.querySelector('.original-forward');
-const originalBack = document.querySelector('.original-back');
-const copyLoopButton = document.querySelector('.org-copy-loop');
+const originalLooping = document.querySelector('.original-looping');
+const copyLoopButton = document.querySelector('.original-copy-loop');
 // Loop buttons
 const loopPlayPauseButton = document.querySelector('.loop-play-pause');
 const loopForward = document.querySelector('.loop-forward');
-const loopBack = document.querySelector('.loop-back');
+const loopBackward = document.querySelector('.loop-back');
+const loopLooping = document.querySelector('.loop-looping');
 
 // Drop in buttons
 const createSmartLoop = document.querySelector('.smart-loop-button');
 
 //=========== DIODES =================//
 const orgPlayDiode = document.querySelector('.org-play-diode');
+const orgLoopingDiode = document.querySelector('.original-looping-diode');
+const orgForwardDiode = document.querySelector('.original-forward-diode');
+const orgBackwardDiode = document.querySelector('.original-backward-diode');
+
+const loopPlayDiode = document.querySelector('.loop-play-diode');
+const loopForwardDiode = document.querySelector('.loop-forward-diode');
+const loopBackwardDiode = document.querySelector('.loop-backward-diode');
+const loopLoopingDiode = document.querySelector('.loop-looping-diode');
 
 //=========== SLIDERS =================//
 const lengthSlider = document.querySelector('#length-slider');
@@ -85,6 +94,7 @@ emitter.on('loaded', () => {
   )} `;
 });
 
+//================== DROP ZONE ==================//
 dropzone.addEventListener(
   'drop',
   e => {
@@ -129,20 +139,39 @@ dropzone.addEventListener('dragover', e => {
 //============================ ORIGINAL CONTROLLER =================================
 originalPlayPauseButton.addEventListener('click', e => {
   originalTrouper.playPause();
-  turnOffDiodes(diodes);
   if (originalTrouper.isPlaying()) {
     orgPlayDiode.classList.add('glowing');
+  } else {
+    orgPlayDiode.classList.remove('glowing');
   }
 
-  if (loopTrouper.isPlaying()) loopTrouper.pause();
+  if (loopTrouper.isPlaying()) {
+    loopPlayDiode.classList.remove('glowing');
+    loopTrouper.pause();
+  }
 });
 
-originalForward.addEventListener('click', e => {
+originalForward.addEventListener('mousedown', e => {
   originalTrouper.forwardFive();
+  orgForwardDiode.classList.add('glowing');
+  // originalTrouper.fastForward();
+});
+originalForward.addEventListener('mouseup', e => {
+  orgForwardDiode.classList.remove('glowing');
 });
 
-originalBack.addEventListener('click', e => {
+originalBackward.addEventListener('mousedown', e => {
   originalTrouper.backFive();
+  orgBackwardDiode.classList.add('glowing');
+  // originalTrouper.fastForward();
+});
+originalBackward.addEventListener('mouseup', e => {
+  orgBackwardDiode.classList.remove('glowing');
+});
+
+originalLooping.addEventListener('click', e => {
+  orgLoopingDiode.classList.toggle('glowing');
+  originalTrouper.toogleLoop();
 });
 
 copyLoopButton.addEventListener('click', e => {
@@ -158,15 +187,38 @@ copyLoopButton.addEventListener('click', e => {
 //============================== LOOP CONTROLLERS ================================
 loopPlayPauseButton.addEventListener('click', e => {
   loopTrouper.playPause();
-  if (originalTrouper.isPlaying()) originalTrouper.pause();
+  if (loopTrouper.isPlaying()) {
+    loopPlayDiode.classList.add('glowing');
+  } else {
+    loopPlayDiode.classList.remove('glowing');
+  }
+  if (originalTrouper.isPlaying()) {
+    originalTrouper.pause();
+    orgPlayDiode.classList.remove('glowing');
+  }
 });
 
-loopForward.addEventListener('click', e => {
+loopForward.addEventListener('mousedown', e => {
   loopTrouper.forwardFive();
+  loopForwardDiode.classList.add('glowing');
+  // loopTrouper.fastForward();
+});
+loopForward.addEventListener('mouseup', e => {
+  loopForwardDiode.classList.remove('glowing');
 });
 
-loopBack.addEventListener('click', e => {
+loopBackward.addEventListener('mousedown', e => {
   loopTrouper.backFive();
+  loopBackwardDiode.classList.add('glowing');
+  // loopTrouper.fastForward();
+});
+loopBackward.addEventListener('mouseup', e => {
+  loopBackwardDiode.classList.remove('glowing');
+});
+
+loopLooping.addEventListener('click', e => {
+  loopLoopingDiode.classList.toggle('glowing');
+  loopTrouper.toogleLoop();
 });
 //========================= EXPORT LOOP =====================================
 
