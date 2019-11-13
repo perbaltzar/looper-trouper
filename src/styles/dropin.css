@@ -107,3 +107,25 @@ h3 {
 .eq-labels-container label {
   font-size: 10px;
 }
+
+.smart-loop-container {
+  display: flex;
+}
+
+.smart-loop-button {
+  margin-left: 10px;
+  height: 50px;
+  width: 100px;
+  padding: 5px 0;
+  background-color: #ec417a;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.smart-loop-button:hover {
+  background-color: #eab6cc;
+}

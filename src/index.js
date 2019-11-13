@@ -36,7 +36,7 @@ const loopForward = document.querySelector('.loop-forward');
 const loopBack = document.querySelector('.loop-back');
 
 // Drop in buttons
-const createSmartLoop = document.querySelector('.smart-loop');
+const createSmartLoop = document.querySelector('.smart-loop-button');
 
 //=========== DIODES =================//
 const orgPlayDiode = document.querySelector('.org-play-diode');

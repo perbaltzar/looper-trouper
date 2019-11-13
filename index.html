@@ -14,12 +14,12 @@
     <link rel="stylesheet" type="text/css" href="src/styles/speakers.css" />
     <link rel="stylesheet" type="text/css" href="src/styles/background.css" />
     <link rel="stylesheet" type="text/css" href="src/styles/dropzone.css" />
-    <link rel="stylesheet" type="text/css" href="src/styles/dropin.css" />
     <link
-      rel="stylesheet"
-      type="text/css"
-      href="src/styles/controll-button.css"
+    rel="stylesheet"
+    type="text/css"
+    href="src/styles/controll-button.css"
     />
+    <link rel="stylesheet" type="text/css" href="src/styles/dropin.css" />
     <title>Looper Trouper</title>
   </head>
   <body>
@@ -55,11 +55,14 @@
           </div>
         </form>
         <h3>Smart Loop</h3>
-        <button class="controll-button smart-loop"></button>
-        <form>
-          <input id="length-slider" class="slider" type="range" min="1" max="100"> </input>
-        </form>
-        <p class="minimun-length-display">Length: </p>
+        <div class="smart-loop-container">
+          <div>
+            <input id="length-slider" class="slider" type="range" min="1" max="100"> </input>
+            <p class="minimun-length-display">Length: </p>
+          </div>
+          <button class="smart-loop-button">Get Smart Loop</button>
+        </div>
+        
       </div>
     </div>
     <div class="handle">
