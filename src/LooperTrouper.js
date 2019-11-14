@@ -55,6 +55,7 @@ export default class LooperTrouper {
     this.loopEnd = null;
     this.emitter = emitter;
     this.setStartTime(this.getNow());
+    this.isLooped = false;
   }
 
   /**
@@ -98,7 +99,7 @@ export default class LooperTrouper {
         this.placingLoop = false;
       }
     });
-    this.createUpdateWaveform();
+    this.ticker();
   }
 
   /**
@@ -387,7 +388,7 @@ export default class LooperTrouper {
   /**
    * Loop to change colors of played bars
    */
-  createUpdateWaveform() {
+  ticker() {
     this.pixi.ticker.add(() => {
       if (this.state === PLAYING || this.doDraw) {
         // Get progress
@@ -398,14 +399,19 @@ export default class LooperTrouper {
 
         // Look for eventsFired when clip finished
         if (this.getProgressPercent() > 0.99999) {
+          console.log(this.audioContext.currentTime, this.getStartTime());
           this.setStartTime();
         }
 
         // Place locator
         this.locator.tick(this.width * this.getProgressPercent());
 
-        // Place Loop
-        if (this.placingLoop) {
+        // Play loop
+        if (this.isLooped && this.hasLoop()) {
+          if (this.getProgressPlayed() > this.loopEnd) {
+            console.log('go back');
+            this.changeLocatorPosition(this.width * (this.loopStart / this.duration));
+          }
         }
 
         if (this.reDraw) this.doDraw = false;
@@ -563,6 +569,7 @@ export default class LooperTrouper {
     this.loopStart = null;
     this.loopEnd = null;
     this.loopGraphics.clear();
+    this.isLooped = false;
     if (this.bars) {
       this.bars.forEach(bar => {
         bar.clear();
