@@ -6,16 +6,43 @@
   display: flex;
   padding-top: 100px;
   justify-content: center;
-}
-.hidden {
-  display: none;
-}
-
-.highlight {
   background-color: #00000055;
 }
 
 .drop-message {
   font-size: 40px;
   color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.drop-message img {
+  margin-top: 12px;
+  height: 65px;
+  width: 65px;
+}
+
+.drop-loading {
+  position: absolute;
+  z-index: 30;
+  top: 100px;
+}
+
+.loading-animation {
+  animation: rotate 1s infinite linear;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+.hidden {
+  display: none;
 }

@@ -50,16 +50,19 @@ const loopForwardDiode = document.querySelector('.loop-forward-diode');
 const loopBackwardDiode = document.querySelector('.loop-backward-diode');
 const loopLoopingDiode = document.querySelector('.loop-looping-diode');
 
+const diodes = document.querySelectorAll('.diode');
 //=========== SLIDERS =================//
 const lengthSlider = document.querySelector('#length-slider');
 const lengthDisplay = document.querySelector('.minimun-length-display');
-const dropzone = document.querySelector('.drop-zone');
-const dropMessage = document.querySelector('.drop-message');
 
-let dragCounter = 0;
-const diodes = document.querySelectorAll('.diode');
+//=========== DROP ZONE ===============//
+const dropzone = document.querySelector('.drop-zone');
+const dropMessage = document.querySelector('.drop-message-hover');
+const dropMessageIntro = document.querySelector('.drop-message-intro');
+const loading = document.querySelector('.drop-loading');
 
 //============== VARIABLES =============//
+let dragCounter = 0;
 let minimumLoopLength = 5;
 let songInformation, loopInformation;
 
@@ -92,12 +95,14 @@ emitter.on('loaded', () => {
   loopDuration.innerText = `Duration: ${getReadableTime(
     loopInformation.loop.end - loopInformation.loop.start,
   )} `;
+  loading.classList.add('hidden');
 });
 
 //================== DROP ZONE ==================//
 dropzone.addEventListener(
   'drop',
   e => {
+    loading.classList.remove('hidden');
     e.preventDefault();
     e.stopPropagation();
     const file = e.dataTransfer.files;
@@ -119,6 +124,7 @@ dropzone.addEventListener('dragenter', e => {
   dragCounter++;
   dropzone.classList.toggle('highlight');
   dropMessage.classList.toggle('hidden');
+  dropMessageIntro.classList.toggle('hidden');
 });
 
 dropzone.addEventListener('dragleave', e => {
@@ -128,6 +134,7 @@ dropzone.addEventListener('dragleave', e => {
   if (dragCounter < 1) {
     dropzone.classList.toggle('highlight');
     dropMessage.classList.toggle('hidden');
+    dropMessageIntro.classList.toggle('hidden');
   }
 });
 
