@@ -6,9 +6,6 @@
   display: flex;
   padding-top: 100px;
   justify-content: center;
-}
-
-.highlight {
   background-color: #00000055;
 }
 
