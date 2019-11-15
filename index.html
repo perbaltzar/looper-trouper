@@ -59,11 +59,11 @@
           </div>
           <form class="equalizer">
             <div class="eq-sliders-containter">
-              <input id="low" class="eq-slider slider" type="range" min="-40" max="40"> </input>
-              <input id="low-mid" class="eq-slider slider" type="range" min="-40" max="40"></input>
-              <input id="mid" class="eq-slider slider" type="range" min="-40" max="40"></input>
-              <input id="high-mid" class="eq-slider slider" type="range" min="-40" max="40"></input>
-              <input id="high" class="eq-slider slider" type="range" min="-40" max="40"></input>
+              <input id="low" class="eq-slider slider" type="range" min="-40" max="40" value="0"> </input>
+              <input id="low-mid" class="eq-slider slider" type="range" min="-40" max="40" value="0"></input>
+              <input id="mid" class="eq-slider slider" type="range" min="-40" max="40" value="0"></input>
+              <input id="high-mid" class="eq-slider slider" type="range" min="-40" max="40" value="0"></input>
+              <input id="high" class="eq-slider slider" type="range" min="-40" max="40" value="0"></input>
             </div>
             <div class="eq-labels-container"> 
               <label for="low">60Hz</label>
@@ -83,7 +83,7 @@
             </button>  
           </div>
           <div class="low-pass-settings">
-            <input id="low-pass-slider" class="slider low-pass-slider" type="range" min="0" max="6000"> </input>
+            <input id="low-pass-slider" class="slider low-pass-slider" type="range" min="0" max="6000"  value="6000"> </input>
             <p class="low-pass-frequency">Frequency: </p>
           </div>
         </div>
@@ -96,7 +96,7 @@
             </button>
           </div>
           <div class="high-pass-settings">
-            <input id="high-pass-slider" class="slider high-pass-slider" type="range" min="0" max="14000"> </input>
+            <input id="high-pass-slider" class="slider high-pass-slider" type="range" min="0" max="14000" value="0"> </input>
             <p class="high-pass-frequency">Frequency: </p>
           </div>
         </div>

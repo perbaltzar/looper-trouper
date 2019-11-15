@@ -291,7 +291,24 @@ resetSong.addEventListener('click', e => {
 
 //======================== EQ =========================\\
 eqSwitch.addEventListener('click', e => {
+  loopTrouper.toggleEq();
   eqDiode.classList.toggle('glowing');
+});
+
+low.addEventListener('input', e => {
+  loopTrouper.setLowGain(-e.target.value);
+});
+lowMid.addEventListener('input', e => {
+  loopTrouper.setLowMidGain(-e.target.value);
+});
+mid.addEventListener('input', e => {
+  loopTrouper.setMidGain(-e.target.value);
+});
+highMid.addEventListener('input', e => {
+  loopTrouper.setHighMidGain(-e.target.value);
+});
+high.addEventListener('input', e => {
+  loopTrouper.setHighGain(-e.target.value);
 });
 
 //======================== LOW PASS =========================\\

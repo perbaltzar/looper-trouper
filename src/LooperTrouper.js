@@ -140,6 +140,10 @@ export default class LooperTrouper {
     this.fireEvent('loaded');
   }
 
+  /**
+   * loads buffer in LooperTrouper
+   * @param buffer audio buffer
+   */
   loadBuffer(buffer) {
     this.reset();
     this.peaks = getPeaks(buffer, 300);
@@ -160,6 +164,9 @@ export default class LooperTrouper {
     this.size = size;
   }
 
+  /**
+   * return object with file information
+   */
   getFileInformation() {
     return {
       name: this.name,
@@ -168,6 +175,9 @@ export default class LooperTrouper {
     };
   }
 
+  /**
+   * return this duration
+   */
   getDuration() {
     return this.duration;
   }
@@ -376,6 +386,7 @@ export default class LooperTrouper {
     if (this.isPlaying()) return this.getProgressPlayed() / this.duration;
     return this.getProgress() / this.duration;
   }
+
   /**
    * set coordinates of loop
    * @param start loop start position x
@@ -401,12 +412,6 @@ export default class LooperTrouper {
   }
 
   /**
-   * ? Click Event
-   * placing the loop
-   * @param myParam explain the param
-   */
-
-  /**
    * return Bars based on peaks and width
    */
   createBars() {
@@ -426,6 +431,7 @@ export default class LooperTrouper {
   reDraw() {
     this.doDraw = true;
   }
+
   /**
    * Loop to change colors of played bars
    */
@@ -650,6 +656,55 @@ export default class LooperTrouper {
    */
   setLowPassFrequency(hz) {
     this.lowpass.frequency.setValueAtTime(hz, 0);
+  }
+
+  /**
+   * turn eq on and off
+   */
+  toggleEq() {
+    this.eqOn = !this.eqOn;
+    this.setStartTime(this.getProgress());
+    this.play();
+  }
+
+  /**
+   * set the gain of the low in eq
+   * @param gain
+   */
+  setLowGain(gain) {
+    this.eq[0].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setLowMidGain(gain) {
+    this.eq[1].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setMidGain(gain) {
+    this.eq[2].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setHighMidGain(gain) {
+    this.eq[3].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setHighGain(gain) {
+    this.eq[4].gain.value = gain;
   }
 
   /**
