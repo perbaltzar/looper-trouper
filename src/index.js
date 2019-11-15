@@ -22,6 +22,10 @@ const loopStart = document.querySelector('.loop-start');
 const loopEnd = document.querySelector('.loop-end');
 const loopDuration = document.querySelector('.loop-duration');
 
+//================= EFFECT ============ \\
+const lowPassFrequency = document.querySelector('.low-pass-frequency');
+const highPassFrequency = document.querySelector('.high-pass-frequency');
+
 // ========== BUTTONS ================//
 // original buttons
 const originalBackward = document.querySelector('.original-back');
@@ -75,6 +79,9 @@ const lowMid = document.querySelector('#low-mid');
 const mid = document.querySelector('#mid');
 const highMid = document.querySelector('#high-mid');
 const high = document.querySelector('#high');
+
+const lowPassSlider = document.querySelector('.low-pass-slider');
+const highPassSlider = document.querySelector('.high-pass-slider');
 
 //=========== DROP ZONE ===============//
 const dropzone = document.querySelector('.drop-zone');
@@ -291,7 +298,14 @@ eqSwitch.addEventListener('click', e => {
 lowPassSwitch.addEventListener('click', e => {
   lowPassDiode.classList.toggle('glowing');
 });
+
+lowPassSlider.addEventListener('input', e => {
+  lowPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
+});
 //======================== High PASS =========================\\
 highPassSwitch.addEventListener('click', e => {
   highPassDiode.classList.toggle('glowing');
+});
+highPassSlider.addEventListener('input', e => {
+  highPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
 });
