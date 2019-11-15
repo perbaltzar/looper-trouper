@@ -41,9 +41,9 @@ export default class LooperTrouper {
   /** @property {[BiquadFilterNode]} eq an array of the eq filters */
   /** @property {Boolean} eqOn if the eq is on */
   /** @property {BiquadFilterNode} lowpass the low pass filter */
-  /** @property {Boolean} lowpassOn if the lowpass is on */
+  /** @property {Boolean} lowPassOn if the lowpass is on */
   /** @property {BiquadFilterNode} highpass if highpass is on*/
-  /** @property {Boolean} highpassOn if the eq is on */
+  /** @property {Boolean} highPassOn if the eq is on */
 
   constructor(view, width, height, looped, emitter) {
     this.progress = 0;
@@ -75,8 +75,8 @@ export default class LooperTrouper {
     this.lowpass = this.createFilter('lowpass', 14000);
     this.highpass = this.createFilter('highpass', 0);
     this.eqOn = true;
-    this.lowpassOn = false;
-    this.highpassOn = false;
+    this.lowPassOn = false;
+    this.highPassOn = false;
   }
 
   /**
@@ -185,10 +185,10 @@ export default class LooperTrouper {
     if (this.eqOn) {
       connections = [...this.eq];
     }
-    if (this.lowpassOn) {
+    if (this.lowPassOn) {
       connections = [...connections, this.lowpass];
     }
-    if (this.highpassOn) {
+    if (this.highPassOn) {
       connections = [...connections, this.highpass];
     }
     if (connections.length > 0) {
@@ -623,14 +623,14 @@ export default class LooperTrouper {
    * toggle low pass on and off
    */
   toggleHighPass() {
-    this.highpassOn = !this.highpassOn;
+    this.highPassOn = !this.highPassOn;
   }
 
   /**
    * changes the freq of the high pass filter
    * @param hz the frequency to change to
    */
-  changeHighPassFrequency(hz) {
+  setHighPassFrequency(hz) {
     this.highpass.frequency.setValueAtTime(hz, 0);
   }
 
@@ -638,14 +638,14 @@ export default class LooperTrouper {
    * toggle low pass on and off
    */
   toggleLowPass() {
-    this.lowpassOn = !this.lowpassOn;
+    this.lowPassOn = !this.lowPassOn;
   }
 
   /**
    * changes the freq of the low pass filter
    * @param hz the frequency to change to
    */
-  changeLowPassFrequency(hz) {
+  setLowPassFrequency(hz) {
     this.lowpass.frequency.setValueAtTime(hz, 0);
   }
 
@@ -673,8 +673,8 @@ export default class LooperTrouper {
     this.lowpass = this.createFilter('lowpass', 14000);
     this.highpass = this.createFilter('highpass', 0);
     this.eqOn = true;
-    this.lowpassOn = true;
-    this.highpassOn = true;
+    this.lowPassOn = true;
+    this.highPassOn = true;
 
     // reset graphics
     if (this.bars) {
