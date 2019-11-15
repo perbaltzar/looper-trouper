@@ -620,11 +620,25 @@ export default class LooperTrouper {
   }
 
   /**
+   * toggle low pass on and off
+   */
+  toggleHighPass() {
+    this.highpassOn = !this.highpassOn;
+  }
+
+  /**
    * changes the freq of the high pass filter
    * @param hz the frequency to change to
    */
   changeHighPassFrequency(hz) {
     this.highpass.frequency.setValueAtTime(hz, 0);
+  }
+
+  /**
+   * toggle low pass on and off
+   */
+  toggleLowPass() {
+    this.lowpassOn = !this.lowpassOn;
   }
 
   /**
