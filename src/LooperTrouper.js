@@ -24,7 +24,7 @@ export default class LooperTrouper {
   /** @property {[Number]} peaks  the peaks from -1 to 1 */
   /** @property {String} state current state  */
   /** @property {Number} startTime dynamic start time from context */
-  /** @property {Number} Progress seconds played */
+  /** @property {Number} progress seconds played */
   /** @property {Number} progressPercent percentage played */
   /** @property {Number} firstBeat Index of first beat of suggested loop */
   /** @property {Number} lastBeat Index of last beat of suggested loop */
@@ -38,6 +38,12 @@ export default class LooperTrouper {
   /** @property {Number} loopEnd time where loop end */
   /** @property {mitt} emitter emitt events */
   /** @property {Boolean} isLooped if player should played the selected loop */
+  /** @property {[BiquadFilterNode]} eq an array of the eq filters */
+  /** @property {Boolean} eqOn if the eq is on */
+  /** @property {BiquadFilterNode} lowpass the low pass filter */
+  /** @property {Boolean} lowPassOn if the lowpass is on */
+  /** @property {BiquadFilterNode} highpass if highpass is on*/
+  /** @property {Boolean} highPassOn if the eq is on */
 
   constructor(view, width, height, looped, emitter) {
     this.progress = 0;
@@ -56,6 +62,21 @@ export default class LooperTrouper {
     this.emitter = emitter;
     this.setStartTime(this.getNow());
     this.isLooped = false;
+    this.bars = [];
+
+    // Filters
+    this.eq = [
+      this.createFilter('peaking', 60),
+      this.createFilter('peaking', 240),
+      this.createFilter('peaking', 1000),
+      this.createFilter('peaking', 3500),
+      this.createFilter('peaking', 8000),
+    ];
+    this.lowpass = this.createFilter('lowpass', 14000);
+    this.highpass = this.createFilter('highpass', 0);
+    this.eqOn = false;
+    this.lowPassOn = false;
+    this.highPassOn = false;
   }
 
   /**
@@ -119,6 +140,10 @@ export default class LooperTrouper {
     this.fireEvent('loaded');
   }
 
+  /**
+   * loads buffer in LooperTrouper
+   * @param buffer audio buffer
+   */
   loadBuffer(buffer) {
     this.reset();
     this.peaks = getPeaks(buffer, 300);
@@ -139,6 +164,9 @@ export default class LooperTrouper {
     this.size = size;
   }
 
+  /**
+   * return object with file information
+   */
   getFileInformation() {
     return {
       name: this.name,
@@ -147,6 +175,9 @@ export default class LooperTrouper {
     };
   }
 
+  /**
+   * return this duration
+   */
   getDuration() {
     return this.duration;
   }
@@ -158,6 +189,26 @@ export default class LooperTrouper {
     this.source = this.audioContext.createBufferSource();
     this.source.buffer = this.buffer;
     this.source.loop = this.looped;
+
+    let connections = [];
+    if (this.eqOn) {
+      connections = [...this.eq];
+    }
+    if (this.lowPassOn) {
+      connections = [...connections, this.lowpass];
+    }
+    if (this.highPassOn) {
+      connections = [...connections, this.highpass];
+    }
+    if (connections.length > 0) {
+      this.source.connect(connections[0]);
+      let i = 1;
+      for (i; i < connections.length; i++) {
+        connections[i - 1].connect(connections[i]);
+      }
+      connections[i - 1].connect(this.audioContext.destination);
+      return;
+    }
     this.source.connect(this.audioContext.destination);
   }
 
@@ -335,6 +386,7 @@ export default class LooperTrouper {
     if (this.isPlaying()) return this.getProgressPlayed() / this.duration;
     return this.getProgress() / this.duration;
   }
+
   /**
    * set coordinates of loop
    * @param start loop start position x
@@ -360,12 +412,6 @@ export default class LooperTrouper {
   }
 
   /**
-   * ? Click Event
-   * placing the loop
-   * @param myParam explain the param
-   */
-
-  /**
    * return Bars based on peaks and width
    */
   createBars() {
@@ -385,6 +431,7 @@ export default class LooperTrouper {
   reDraw() {
     this.doDraw = true;
   }
+
   /**
    * Loop to change colors of played bars
    */
@@ -399,7 +446,6 @@ export default class LooperTrouper {
 
         // Look for eventsFired when clip finished
         if (this.getProgressPercent() > 0.99999) {
-          console.log(this.audioContext.currentTime, this.getStartTime());
           this.setStartTime();
         }
 
@@ -409,7 +455,6 @@ export default class LooperTrouper {
         // Play loop
         if (this.isLooped && this.hasLoop()) {
           if (this.getProgressPlayed() > this.loopEnd) {
-            console.log('go back');
             this.changeLocatorPosition(this.width * (this.loopStart / this.duration));
           }
         }
@@ -560,6 +605,109 @@ export default class LooperTrouper {
   }
 
   /**
+   * Adds and connects a filter to source
+   * @param type filter type
+   * @param hz frequenzy of the filter
+   */
+  createFilter(type, hz) {
+    const filter = this.audioContext.createBiquadFilter();
+    filter.type = type;
+    filter.frequency.value = hz;
+    return filter;
+  }
+
+  /**
+   * MyName
+   * @param myParam explain the param
+   */
+  changeFilterGain(filter, gain) {
+    filter.gain.value = gain;
+  }
+
+  /**
+   * toggle low pass on and off
+   */
+  toggleHighPass() {
+    this.highPassOn = !this.highPassOn;
+    this.setStartTime(this.getProgress());
+    this.play();
+  }
+
+  /**
+   * changes the freq of the high pass filter
+   * @param hz the frequency to change to
+   */
+  setHighPassFrequency(hz) {
+    this.highpass.frequency.setValueAtTime(hz, 0);
+  }
+
+  /**
+   * toggle low pass on and off
+   */
+  toggleLowPass() {
+    this.lowPassOn = !this.lowPassOn;
+    this.setStartTime(this.getProgress());
+    this.play();
+  }
+
+  /**
+   * changes the freq of the low pass filter
+   * @param hz the frequency to change to
+   */
+  setLowPassFrequency(hz) {
+    this.lowpass.frequency.setValueAtTime(hz, 0);
+  }
+
+  /**
+   * turn eq on and off
+   */
+  toggleEq() {
+    this.eqOn = !this.eqOn;
+    this.setStartTime(this.getProgress());
+    this.play();
+  }
+
+  /**
+   * set the gain of the low in eq
+   * @param gain
+   */
+  setLowGain(gain) {
+    this.eq[0].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setLowMidGain(gain) {
+    this.eq[1].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setMidGain(gain) {
+    this.eq[2].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setHighMidGain(gain) {
+    this.eq[3].gain.value = gain;
+  }
+
+  /**
+   * set the gain of the low mid in eq
+   * @param gain
+   */
+  setHighGain(gain) {
+    this.eq[4].gain.value = gain;
+  }
+
+  /**
    * reset all variables
    */
   reset() {
@@ -570,10 +718,15 @@ export default class LooperTrouper {
     this.loopEnd = null;
     this.loopGraphics.clear();
     this.isLooped = false;
+    this.setStartTime(this.getNow());
+
+    // reset graphics
     if (this.bars) {
       this.bars.forEach(bar => {
         bar.clear();
       });
     }
+    this.changeLocatorPosition(0);
+    this.progress = 0;
   }
 }

@@ -22,6 +22,10 @@ const loopStart = document.querySelector('.loop-start');
 const loopEnd = document.querySelector('.loop-end');
 const loopDuration = document.querySelector('.loop-duration');
 
+//================= EFFECT ============ \\
+const lowPassFrequency = document.querySelector('.low-pass-frequency');
+const highPassFrequency = document.querySelector('.high-pass-frequency');
+
 // ========== BUTTONS ================//
 // original buttons
 const originalBackward = document.querySelector('.original-back');
@@ -38,19 +42,29 @@ const loopLooping = document.querySelector('.loop-looping');
 // Drop in buttons
 const createSmartLoop = document.querySelector('.smart-loop-button');
 const resetSong = document.querySelector('.reset-song');
+const lowPassSwitch = document.querySelector('.low-pass-button');
+const highPassSwitch = document.querySelector('.high-pass-button');
+const eqSwitch = document.querySelector('.eq-button');
 
 //=========== DIODES =================//
 const diodes = document.querySelectorAll('.diode');
 
+// original diodes
 const orgPlayDiode = document.querySelector('.org-play-diode');
 const orgLoopingDiode = document.querySelector('.original-looping-diode');
 const orgForwardDiode = document.querySelector('.original-forward-diode');
 const orgBackwardDiode = document.querySelector('.original-backward-diode');
 
+// loop diodes
 const loopPlayDiode = document.querySelector('.loop-play-diode');
 const loopForwardDiode = document.querySelector('.loop-forward-diode');
 const loopBackwardDiode = document.querySelector('.loop-backward-diode');
 const loopLoopingDiode = document.querySelector('.loop-looping-diode');
+
+// drop-in diodes
+const lowPassDiode = document.querySelector('.low-pass-diode');
+const highPassDiode = document.querySelector('.high-pass-diode');
+const eqDiode = document.querySelector('.eq-diode');
 
 //=========== DROP IN =================
 const dropIn = document.querySelector('.drop-in');
@@ -58,6 +72,16 @@ const dropIn = document.querySelector('.drop-in');
 //=========== SLIDERS =================//
 const lengthSlider = document.querySelector('#length-slider');
 const lengthDisplay = document.querySelector('.minimun-length-display');
+
+// eq
+const low = document.querySelector('#low');
+const lowMid = document.querySelector('#low-mid');
+const mid = document.querySelector('#mid');
+const highMid = document.querySelector('#high-mid');
+const high = document.querySelector('#high');
+
+const lowPassSlider = document.querySelector('.low-pass-slider');
+const highPassSlider = document.querySelector('.high-pass-slider');
 
 //=========== DROP ZONE ===============//
 const dropzone = document.querySelector('.drop-zone');
@@ -263,4 +287,46 @@ resetSong.addEventListener('click', e => {
   dropMessageIntro.classList.remove('hidden');
   resetInformation();
   turnOffDiodes(diodes);
+});
+
+//======================== EQ =========================\\
+eqSwitch.addEventListener('click', e => {
+  loopTrouper.toggleEq();
+  eqDiode.classList.toggle('glowing');
+});
+
+low.addEventListener('input', e => {
+  loopTrouper.setLowGain(-e.target.value);
+});
+lowMid.addEventListener('input', e => {
+  loopTrouper.setLowMidGain(-e.target.value);
+});
+mid.addEventListener('input', e => {
+  loopTrouper.setMidGain(-e.target.value);
+});
+highMid.addEventListener('input', e => {
+  loopTrouper.setHighMidGain(-e.target.value);
+});
+high.addEventListener('input', e => {
+  loopTrouper.setHighGain(-e.target.value);
+});
+
+//======================== LOW PASS =========================\\
+lowPassSwitch.addEventListener('click', e => {
+  loopTrouper.toggleLowPass();
+  lowPassDiode.classList.toggle('glowing');
+});
+
+lowPassSlider.addEventListener('input', e => {
+  lowPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
+  loopTrouper.setLowPassFrequency(e.target.value);
+});
+//======================== High PASS =========================\\
+highPassSwitch.addEventListener('click', e => {
+  loopTrouper.toggleHighPass();
+  highPassDiode.classList.toggle('glowing');
+});
+highPassSlider.addEventListener('input', e => {
+  highPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
+  loopTrouper.setHighPassFrequency(e.target.value);
 });
