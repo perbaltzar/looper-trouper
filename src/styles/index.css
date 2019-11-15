@@ -27,3 +27,7 @@ canvas {
 button:hover {
   cursor: pointer;
 }
+
+p{
+  font-size: 14px;
+}

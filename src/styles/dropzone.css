@@ -1,7 +1,7 @@
 .drop-zone {
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 110vw;
+  height: 110vh;
   z-index: 30;
   display: flex;
   padding-top: 100px;

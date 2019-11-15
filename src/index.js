@@ -4,9 +4,8 @@ import mitt from 'mitt';
 import LooperTrouper from './LooperTrouper.js';
 import loadFile from './utils/loadFile.js';
 import validateFile from './utils/validateFile.js';
-import abba from './assets/abba.mp3';
-import lion from './assets/lion.mp3';
 import getReadableTime from './utils/getReadableTime';
+import turnOffDiodes from './utils/turnOffDiodes';
 
 //============ EMITTER ======= //
 const emitter = mitt();
@@ -38,8 +37,11 @@ const loopLooping = document.querySelector('.loop-looping');
 
 // Drop in buttons
 const createSmartLoop = document.querySelector('.smart-loop-button');
+const resetSong = document.querySelector('.reset-song');
 
 //=========== DIODES =================//
+const diodes = document.querySelectorAll('.diode');
+
 const orgPlayDiode = document.querySelector('.org-play-diode');
 const orgLoopingDiode = document.querySelector('.original-looping-diode');
 const orgForwardDiode = document.querySelector('.original-forward-diode');
@@ -50,7 +52,9 @@ const loopForwardDiode = document.querySelector('.loop-forward-diode');
 const loopBackwardDiode = document.querySelector('.loop-backward-diode');
 const loopLoopingDiode = document.querySelector('.loop-looping-diode');
 
-const diodes = document.querySelectorAll('.diode');
+//=========== DROP IN =================
+const dropIn = document.querySelector('.drop-in');
+
 //=========== SLIDERS =================//
 const lengthSlider = document.querySelector('#length-slider');
 const lengthDisplay = document.querySelector('.minimun-length-display');
@@ -81,6 +85,15 @@ const loopTrouper = new LooperTrouper(
   true,
   emitter,
 );
+
+const resetInformation = () => {
+  songName.innerText = `Name:`;
+  songBpm.innerText = `Bpm:`;
+  songDuration.innerText = `Duration:`;
+  loopStart.innerText = `Start:`;
+  loopEnd.innerText = `End: `;
+  loopDuration.innerText = `Duration: `;
+};
 
 //================= EMITTER EVENTS ============//
 emitter.on('loaded', () => {
@@ -122,7 +135,6 @@ dropzone.addEventListener('dragenter', e => {
   e.preventDefault();
   e.stopPropagation();
   dragCounter++;
-  dropzone.classList.toggle('highlight');
   dropMessage.classList.toggle('hidden');
   dropMessageIntro.classList.toggle('hidden');
 });
@@ -132,7 +144,6 @@ dropzone.addEventListener('dragleave', e => {
   e.stopPropagation();
   dragCounter--;
   if (dragCounter < 1) {
-    dropzone.classList.toggle('highlight');
     dropMessage.classList.toggle('hidden');
     dropMessageIntro.classList.toggle('hidden');
   }
@@ -241,4 +252,15 @@ lengthSlider.addEventListener('input', e => {
   lengthSlider.max = originalTrouper.getDuration();
   minimumLoopLength = e.target.value;
   lengthDisplay.innerText = `Length: ${minimumLoopLength}`;
+});
+
+//========================= RESET SONG ============================\\
+resetSong.addEventListener('click', e => {
+  dropzone.classList.remove('hidden');
+  originalTrouper.reset();
+  loopTrouper.reset();
+  dropIn.classList.remove('active');
+  dropMessageIntro.classList.remove('hidden');
+  resetInformation();
+  turnOffDiodes(diodes);
 });
