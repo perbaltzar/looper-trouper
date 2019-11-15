@@ -32,7 +32,7 @@
       <h5 class="drop-message drop-message-intro ">Drop a file to start looping</h5>
       <h5 class="drop-message drop-message-hover hidden">Drop it!!</h5>
     </div>
-    <div class="drop-in">
+    <div class="drop-in active">
       <button class="drop-in-button"><img class="arrow-icon" src="src/assets/icons/arrow.svg" /></button>
       <div class="drop-in-container">
         <div class="information-container">
@@ -50,29 +50,61 @@
           </div>
         </div>
         <div class="equalizer-container">
-          <h3>Equalizer</h3>
+          <div class="container-header eq-header">
+            <h3>Equalizer</h3>
+            <button class="on-off-button low-pass-button">
+              ON
+              <span class="diode low-pass-diode"></span>
+            </button>
+          </div>
           <form class="equalizer">
             <div class="eq-sliders-containter">
-              <input id="60hz" class="eq-slider slider" type="range" min="-40" max="40"> </input>
-              <input id="240hz" class="eq-slider slider" type="range" min="-40" max="40"></input>
-              <input id="1000hz" class="eq-slider slider" type="range" min="-40" max="40"></input>
-              <input id="3500hz" class="eq-slider slider" type="range" min="-40" max="40"></input>
-              <input id="15000hz" class="eq-slider slider" type="range" min="-40" max="40"></input>
+              <input id="low" class="eq-slider slider" type="range" min="-40" max="40"> </input>
+              <input id="low-mid" class="eq-slider slider" type="range" min="-40" max="40"></input>
+              <input id="mid" class="eq-slider slider" type="range" min="-40" max="40"></input>
+              <input id="high-mid" class="eq-slider slider" type="range" min="-40" max="40"></input>
+              <input id="high" class="eq-slider slider" type="range" min="-40" max="40"></input>
             </div>
             <div class="eq-labels-container"> 
-              <label for="60hz">60Hz</label>
-              <label for="240hz">240Hz</label>
-              <label for="1000hz">1kHz</label>
-              <label for="3500hz">3.5kHz</label>
-              <label for="15000hz">15kHz</label>
+              <label for="low">60Hz</label>
+              <label for="low-mid">240Hz</label>
+              <label for="mid">1kHz</label>
+              <label for="high-mid">3.5kHz</label>
+              <label for="high">8kHz</label>
             </div>
           </form>
+        </div>
+        <div class="low-pass-container">
+          <div class="container-header">
+            <h3>Low Pass Filter</h3>
+            <button class="on-off-button low-pass-button">
+              ON
+              <span class="diode low-pass-diode"></span>
+            </button>  
+          </div>
+          <div class="low-pass-settings">
+            <input id="low-pass-slider" class="slider low-pass-slider" type="range" min="0" max="14000"> </input>
+            <p class="low-pass-frequenzy">Frequency: </p>
+          </div>
+        </div>
+        <div class="high-pass-container">
+          <div class="container-header">
+            <h3>Low Pass Filter</h3>
+            <button class="on-off-button high-pass-button">
+              ON
+              <span class="diode high-pass-diode"></span>
+            </button>
+          </div>
+          <div class="high-pass-settings">
+            <input id="high-pass-slider" class="slider high-pass-slider" type="range" min="0" max="14000"> </input>
+            <p class="high-pass-frequenzy">Frequency: </p>
+          </div>
         </div>
         <div class="smart-loop-container">
           <h3>Smart Loop</h3>
           <div class="smart-loop-slider-container">
             <div>
-              <input id="length-slider" class="slider smart-loop-slider" type="range" 40min="1" max="100"> </input>
+              <input id="length-slider" class="slider smart-loop-slider" type="range" min="1" max="100"> </input>
               <p class="minimun-length-display">Length: </p>
             </div>
             <button class="smart-loop-button">Get Smart Loop</button>
