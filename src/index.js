@@ -296,16 +296,20 @@ eqSwitch.addEventListener('click', e => {
 
 //======================== LOW PASS =========================\\
 lowPassSwitch.addEventListener('click', e => {
+  loopTrouper.toggleLowPass();
   lowPassDiode.classList.toggle('glowing');
 });
 
 lowPassSlider.addEventListener('input', e => {
   lowPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
+  loopTrouper.setLowPassFrequency(e.target.value);
 });
 //======================== High PASS =========================\\
 highPassSwitch.addEventListener('click', e => {
+  loopTrouper.toggleHighPass();
   highPassDiode.classList.toggle('glowing');
 });
 highPassSlider.addEventListener('input', e => {
   highPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
+  loopTrouper.setHighPassFrequency(e.target.value);
 });
