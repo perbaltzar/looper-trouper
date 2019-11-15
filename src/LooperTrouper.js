@@ -24,7 +24,7 @@ export default class LooperTrouper {
   /** @property {[Number]} peaks  the peaks from -1 to 1 */
   /** @property {String} state current state  */
   /** @property {Number} startTime dynamic start time from context */
-  /** @property {Number} Progress seconds played */
+  /** @property {Number} progress seconds played */
   /** @property {Number} progressPercent percentage played */
   /** @property {Number} firstBeat Index of first beat of suggested loop */
   /** @property {Number} lastBeat Index of last beat of suggested loop */
@@ -38,6 +38,12 @@ export default class LooperTrouper {
   /** @property {Number} loopEnd time where loop end */
   /** @property {mitt} emitter emitt events */
   /** @property {Boolean} isLooped if player should played the selected loop */
+  /** @property {[BiquadFilterNode]} eq an array of the eq filters */
+  /** @property {Boolean} eqOn if the eq is on */
+  /** @property {BiquadFilterNode} lowpass the low pass filter */
+  /** @property {Boolean} lowpassOn if the lowpass is on */
+  /** @property {BiquadFilterNode} highpass if highpass is on*/
+  /** @property {Boolean} highpassOn if the eq is on */
 
   constructor(view, width, height, looped, emitter) {
     this.progress = 0;
@@ -56,6 +62,21 @@ export default class LooperTrouper {
     this.emitter = emitter;
     this.setStartTime(this.getNow());
     this.isLooped = false;
+    this.bars = [];
+
+    // Filters
+    this.eq = [
+      this.createFilter('peaking', 60),
+      this.createFilter('peaking', 240),
+      this.createFilter('peaking', 1000),
+      this.createFilter('peaking', 3500),
+      this.createFilter('peaking', 8000),
+    ];
+    this.lowpass = this.createFilter('lowpass', 14000);
+    this.highpass = this.createFilter('highpass', 0);
+    this.eqOn = true;
+    this.lowpassOn = false;
+    this.highpassOn = false;
   }
 
   /**
@@ -158,6 +179,27 @@ export default class LooperTrouper {
     this.source = this.audioContext.createBufferSource();
     this.source.buffer = this.buffer;
     this.source.loop = this.looped;
+
+    let connections = [];
+
+    if (this.eqOn) {
+      connections = [...this.eq];
+    }
+    if (this.lowpassOn) {
+      connections = [...connections, this.lowpass];
+    }
+    if (this.highpassOn) {
+      connections = [...connections, this.highpass];
+    }
+    if (connections.length > 0) {
+      this.source.connect(connections[0]);
+      let i = 1;
+      for (i; i < connections.length; i++) {
+        connections[i - 1].connect(connections[i]);
+      }
+      connections[i - 1].connect(this.audioContext.destination);
+      return;
+    }
     this.source.connect(this.audioContext.destination);
   }
 
@@ -399,7 +441,6 @@ export default class LooperTrouper {
 
         // Look for eventsFired when clip finished
         if (this.getProgressPercent() > 0.99999) {
-          console.log(this.audioContext.currentTime, this.getStartTime());
           this.setStartTime();
         }
 
@@ -409,7 +450,6 @@ export default class LooperTrouper {
         // Play loop
         if (this.isLooped && this.hasLoop()) {
           if (this.getProgressPlayed() > this.loopEnd) {
-            console.log('go back');
             this.changeLocatorPosition(this.width * (this.loopStart / this.duration));
           }
         }
@@ -560,6 +600,26 @@ export default class LooperTrouper {
   }
 
   /**
+   * Adds and connects a filter to source
+   * @param type filter type
+   * @param hz frequenzy of the filter
+   */
+  createFilter(type, hz) {
+    const filter = this.audioContext.createBiquadFilter();
+    filter.type = type;
+    filter.frequency.value = hz;
+    return filter;
+  }
+
+  /**
+   * MyName
+   * @param myParam explain the param
+   */
+  changeFilterGain(filter, gain) {
+    filter.gain.value = gain;
+  }
+
+  /**
    * reset all variables
    */
   reset() {
@@ -570,10 +630,29 @@ export default class LooperTrouper {
     this.loopEnd = null;
     this.loopGraphics.clear();
     this.isLooped = false;
+    this.setStartTime(this.getNow());
+
+    // reset filters
+    this.eq = [
+      this.createFilter('peaking', 60),
+      this.createFilter('peaking', 240),
+      this.createFilter('peaking', 1000),
+      this.createFilter('peaking', 3500),
+      this.createFilter('peaking', 8000),
+    ];
+    this.lowpass = this.createFilter('lowpass', 14000);
+    this.highpass = this.createFilter('highpass', 0);
+    this.eqOn = true;
+    this.lowpassOn = true;
+    this.highpassOn = true;
+
+    // reset graphics
     if (this.bars) {
       this.bars.forEach(bar => {
         bar.clear();
       });
     }
+    this.changeLocatorPosition(0);
+    this.progress = 0;
   }
 }
