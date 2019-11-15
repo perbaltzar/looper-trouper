@@ -620,6 +620,22 @@ export default class LooperTrouper {
   }
 
   /**
+   * changes the freq of the high pass filter
+   * @param hz the frequency to change to
+   */
+  changeHighPassFrequency(hz) {
+    this.highpass.frequency.setValueAtTime(hz, 0);
+  }
+
+  /**
+   * changes the freq of the low pass filter
+   * @param hz the frequency to change to
+   */
+  changeLowPassFrequency(hz) {
+    this.lowpass.frequency.setValueAtTime(hz, 0);
+  }
+
+  /**
    * reset all variables
    */
   reset() {
