@@ -4,8 +4,6 @@ import mitt from 'mitt';
 import LooperTrouper from './LooperTrouper.js';
 import loadFile from './utils/loadFile.js';
 import validateFile from './utils/validateFile.js';
-import abba from './assets/abba.mp3';
-import lion from './assets/lion.mp3';
 import getReadableTime from './utils/getReadableTime';
 import turnOffDiodes from './utils/turnOffDiodes';
 
