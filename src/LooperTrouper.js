@@ -74,7 +74,7 @@ export default class LooperTrouper {
     ];
     this.lowpass = this.createFilter('lowpass', 14000);
     this.highpass = this.createFilter('highpass', 0);
-    this.eqOn = true;
+    this.eqOn = false;
     this.lowPassOn = false;
     this.highPassOn = false;
   }
@@ -181,7 +181,6 @@ export default class LooperTrouper {
     this.source.loop = this.looped;
 
     let connections = [];
-
     if (this.eqOn) {
       connections = [...this.eq];
     }
@@ -624,6 +623,8 @@ export default class LooperTrouper {
    */
   toggleHighPass() {
     this.highPassOn = !this.highPassOn;
+    this.setStartTime(this.getProgress());
+    this.play();
   }
 
   /**
@@ -639,6 +640,8 @@ export default class LooperTrouper {
    */
   toggleLowPass() {
     this.lowPassOn = !this.lowPassOn;
+    this.setStartTime(this.getProgress());
+    this.play();
   }
 
   /**
@@ -661,20 +664,6 @@ export default class LooperTrouper {
     this.loopGraphics.clear();
     this.isLooped = false;
     this.setStartTime(this.getNow());
-
-    // reset filters
-    this.eq = [
-      this.createFilter('peaking', 60),
-      this.createFilter('peaking', 240),
-      this.createFilter('peaking', 1000),
-      this.createFilter('peaking', 3500),
-      this.createFilter('peaking', 8000),
-    ];
-    this.lowpass = this.createFilter('lowpass', 14000);
-    this.highpass = this.createFilter('highpass', 0);
-    this.eqOn = true;
-    this.lowPassOn = true;
-    this.highPassOn = true;
 
     // reset graphics
     if (this.bars) {
