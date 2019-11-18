@@ -14,6 +14,9 @@ const emitter = mitt();
 const originalCanvas = document.querySelector('#original');
 const loopCanvas = document.querySelector('#loop');
 
+//========== SPEAKER ===========\\
+const speakers = document.querySelectorAll('.speaker');
+
 //=========================== SONG INFO =======================//
 const songName = document.querySelector('.song-name');
 const songDuration = document.querySelector('.song-duration');
@@ -184,8 +187,16 @@ dropzone.addEventListener('dragover', e => {
 originalPlayPauseButton.addEventListener('click', e => {
   originalTrouper.playPause();
   if (originalTrouper.isPlaying()) {
+    // Play the speakers
+    const animationTime = 60 / songInformation.bpm;
+    speakers.forEach(speaker => {
+      speaker.style.animation = `play ${animationTime}s infinite`;
+    });
     orgPlayDiode.classList.add('glowing');
   } else {
+    speakers.forEach(speaker => {
+      speaker.style.animation = ``;
+    });
     orgPlayDiode.classList.remove('glowing');
   }
 
@@ -235,7 +246,14 @@ loopPlayPauseButton.addEventListener('click', e => {
   loopTrouper.playPause();
   if (loopTrouper.isPlaying()) {
     loopPlayDiode.classList.add('glowing');
+    const animationTime = 60 / songInformation.bpm;
+    speakers.forEach(speaker => {
+      speaker.style.animation = `play ${animationTime}s infinite`;
+    });
   } else {
+    speakers.forEach(speaker => {
+      speaker.style.animation = ``;
+    });
     loopPlayDiode.classList.remove('glowing');
   }
   if (originalTrouper.isPlaying()) {
