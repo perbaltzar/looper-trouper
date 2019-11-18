@@ -5,6 +5,7 @@ import getPeaks from './utils/getPeaks';
 import Bar from './Bar';
 import ProgressLocator from './ProgressLocator';
 import Loop from './Loop';
+import LoopMousePointer from './LoopMousePointer';
 
 // Constant to prevent spellingmistakes
 const PLAYING = 'playing';
@@ -32,6 +33,7 @@ export default class LooperTrouper {
   /** @property {ProgressLocator} locator PIXI.Sprite of progress */
   /** @property {Bar} bars PIXI.Graphics of wave bars */
   /** @property {Loop} loopGraphics PIXI.Graphics of loop */
+  /** @property {LoopMousePointer} loopMousePointer PIXI.Graphics of loop */
   /** @property {Boolean} doDraw redraw graphics once when true */
   /** @property {Boolean} placingLoop true if user is placing loop */
   /** @property {Number} loopStart time where loop start */
@@ -55,6 +57,7 @@ export default class LooperTrouper {
     this.height = height;
     this.locator = new ProgressLocator(100, height, this.pixi.stage);
     this.loopGraphics = new Loop(1, 100, height, this.pixi.stage);
+    this.loopMousePointer = new LoopMousePointer(this.pixi.stage);
     this.looped = looped || false;
     this.placingLoop = false;
     this.loopStart = null;
@@ -100,6 +103,7 @@ export default class LooperTrouper {
       const { x, y } = event.data.global;
 
       if (this.placingLoop) {
+        this.loopMousePointer.isVisible = false;
         this.placingLoop = false;
         return;
       }
@@ -107,6 +111,7 @@ export default class LooperTrouper {
         this.changeLocatorPosition(x);
       }
       if (y < 30 && !this.placingLoop) {
+        this.loopMousePointer.isVisible = true;
         this.loopGraphics.start = x;
         this.placingLoop = true;
       }
@@ -118,6 +123,7 @@ export default class LooperTrouper {
         const end = this.duration * (this.loopGraphics.end / this.width);
         this.setLoopPosition(start, end);
         this.placingLoop = false;
+        this.loopMousePointer.isVisible = false;
       }
     });
 
@@ -127,6 +133,18 @@ export default class LooperTrouper {
         const end = this.duration * (this.loopGraphics.end / this.width);
         this.setLoopPosition(start, end);
         this.placingLoop = false;
+        this.loopMousePointer.isVisible = false;
+      }
+    });
+
+    this.pixi.renderer.plugins.interaction.on('mousemove', event => {
+      const { x, y } = event.data.global;
+      if (y < 30 && y > 0) {
+        this.loopMousePointer.x = x + 5;
+        this.loopMousePointer.y = y;
+      } else {
+        this.loopMousePointer.x = -100;
+        this.loopMousePointer.y = -100;
       }
     });
     this.ticker();
@@ -460,6 +478,9 @@ export default class LooperTrouper {
 
         // Place locator
         this.locator.tick(this.width * this.getProgressPercent());
+
+        // Mouse Pointer
+        this.loopMousePointer.tick();
 
         // Play loop
         if (this.isLooped && this.hasLoop()) {
