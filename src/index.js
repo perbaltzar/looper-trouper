@@ -321,7 +321,7 @@ createSmartLoop.addEventListener('click', e => {
 lengthSlider.addEventListener('input', e => {
   lengthSlider.max = originalTrouper.getDuration();
   minimumLoopLength = e.target.value;
-  lengthDisplay.innerText = `Length: ${minimumLoopLength}`;
+  lengthDisplay.innerText = `Length: ${minimumLoopLength} seconds`;
 });
 
 //========================= RESET SONG ============================\\
