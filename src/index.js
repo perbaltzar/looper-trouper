@@ -33,11 +33,13 @@ const originalPlayPauseButton = document.querySelector('.original-play-pause');
 const originalForward = document.querySelector('.original-forward');
 const originalLooping = document.querySelector('.original-looping');
 const copyLoopButton = document.querySelector('.original-copy-loop');
+
 // Loop buttons
 const loopPlayPauseButton = document.querySelector('.loop-play-pause');
 const loopForward = document.querySelector('.loop-forward');
 const loopBackward = document.querySelector('.loop-back');
 const loopLooping = document.querySelector('.loop-looping');
+const loopCopyLoop = document.querySelector('.copy-loop-loop');
 
 // Drop in buttons
 const createSmartLoop = document.querySelector('.smart-loop-button');
@@ -254,7 +256,6 @@ loopForward.addEventListener('mouseup', e => {
 loopBackward.addEventListener('mousedown', e => {
   loopTrouper.backFive();
   loopBackwardDiode.classList.add('glowing');
-  // loopTrouper.fastForward();
 });
 loopBackward.addEventListener('mouseup', e => {
   loopBackwardDiode.classList.remove('glowing');
@@ -264,6 +265,20 @@ loopLooping.addEventListener('click', e => {
   loopLoopingDiode.classList.toggle('glowing');
   loopTrouper.toogleLoop();
 });
+
+loopCopyLoop.addEventListener('click', e => {
+  if (loopTrouper.hasLoop()) {
+    const copyLoop = loopTrouper.getLoopPosition();
+    const buffer = loopTrouper.exportLoop(copyLoop.start, copyLoop.end);
+    loopTrouper.pause();
+    originalTrouper.pause();
+    orgPlayDiode.classList.remove('glowing');
+    loopPlayDiode.classList.remove('glowing');
+    loopTrouper.setAudioBuffer(buffer);
+    loopTrouper.loadBuffer(buffer);
+  }
+});
+
 //========================= EXPORT LOOP =====================================
 
 createSmartLoop.addEventListener('click', e => {
@@ -325,6 +340,7 @@ lowPassSlider.addEventListener('input', e => {
   lowPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
   loopTrouper.setLowPassFrequency(e.target.value);
 });
+
 //======================== High PASS =========================\\
 highPassSwitch.addEventListener('click', e => {
   loopTrouper.toggleHighPass();
