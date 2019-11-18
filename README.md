@@ -1,11 +1,10 @@
-# Music-Analytics
+# Looper Trouper
 
-A graphic tool for creating loops from a audio file.
-Both automatic from analyzing the songs data and customizable by the user
+A fun graphic tool for creating loops from an audio file. Both in an automatic way from analyzing the song's data and customizable by the user. Add some effects and play around.
 
 ## Tools
 
-Created with the use of [Web Audio Api](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and [Pixi.js](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+Created with the use of [Web Audio Api](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API), [Pixi.js](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) and [mitt](https://github.com/developit/mitt)
 
 ## Credits
 
@@ -15,19 +14,11 @@ A big chunk of help from to alot of people.
 
 `yarn or npm install`
 
-## Todo
-
-### Graphics
-
-- [ ] Visualization of BPM in side bar.
-- [ ] Loading Screen
-- [ ] Print out song information in side bar
+## Backlog
 
 ### Effects
 
 - [ ] Cross Fade in loop
-- [ ] Filters to loop
-- [ ] Equalizer to loop
 
 ### Analyzer
 
@@ -45,6 +36,11 @@ A big chunk of help from to alot of people.
 
 ## Done
 
+- [x] Filters to loop
+- [x] Equalizer to loop
+- [x] Visualization of BPM in the speakers.
+- [x] Loading Screen
+- [x] Print out song information in side bar
 - [x] Controll buttons, Play, Pause, +/- 5 sec, Suggest Loop, Export Loop
 - [x] Change position in canvas and play from there
 - [x] Smart Loop visible in original wave form
