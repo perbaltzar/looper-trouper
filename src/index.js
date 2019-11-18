@@ -1,4 +1,4 @@
-import 'regenerator-runtime/runtime';
+require('regenerator-runtime/runtime');
 import * as PIXI from 'pixi.js';
 import mitt from 'mitt';
 import LooperTrouper from './LooperTrouper.js';
