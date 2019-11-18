@@ -1,4 +1,4 @@
-import 'regenerator-runtime/runtime';
+require('regenerator-runtime/runtime');
 import * as PIXI from 'pixi.js';
 import mitt from 'mitt';
 import LooperTrouper from './LooperTrouper.js';
@@ -13,6 +13,9 @@ const emitter = mitt();
 //========== CANVAS =========//
 const originalCanvas = document.querySelector('#original');
 const loopCanvas = document.querySelector('#loop');
+
+//========== SPEAKER ===========\\
+const speakers = document.querySelectorAll('.speaker');
 
 //=========================== SONG INFO =======================//
 const songName = document.querySelector('.song-name');
@@ -33,11 +36,13 @@ const originalPlayPauseButton = document.querySelector('.original-play-pause');
 const originalForward = document.querySelector('.original-forward');
 const originalLooping = document.querySelector('.original-looping');
 const copyLoopButton = document.querySelector('.original-copy-loop');
+
 // Loop buttons
 const loopPlayPauseButton = document.querySelector('.loop-play-pause');
 const loopForward = document.querySelector('.loop-forward');
 const loopBackward = document.querySelector('.loop-back');
 const loopLooping = document.querySelector('.loop-looping');
+const loopCopyLoop = document.querySelector('.copy-loop-loop');
 
 // Drop in buttons
 const createSmartLoop = document.querySelector('.smart-loop-button');
@@ -182,8 +187,16 @@ dropzone.addEventListener('dragover', e => {
 originalPlayPauseButton.addEventListener('click', e => {
   originalTrouper.playPause();
   if (originalTrouper.isPlaying()) {
+    // Play the speakers
+    const animationTime = 60 / songInformation.bpm;
+    speakers.forEach(speaker => {
+      speaker.style.animation = `play ${animationTime}s infinite`;
+    });
     orgPlayDiode.classList.add('glowing');
   } else {
+    speakers.forEach(speaker => {
+      speaker.style.animation = ``;
+    });
     orgPlayDiode.classList.remove('glowing');
   }
 
@@ -221,6 +234,8 @@ copyLoopButton.addEventListener('click', e => {
     const copyLoop = originalTrouper.getLoopPosition();
     const buffer = originalTrouper.exportLoop(copyLoop.start, copyLoop.end);
     originalTrouper.pause();
+    orgPlayDiode.classList.remove('glowing');
+    loopPlayDiode.classList.remove('glowing');
     loopTrouper.setAudioBuffer(buffer);
     loopTrouper.loadBuffer(buffer);
   }
@@ -231,7 +246,14 @@ loopPlayPauseButton.addEventListener('click', e => {
   loopTrouper.playPause();
   if (loopTrouper.isPlaying()) {
     loopPlayDiode.classList.add('glowing');
+    const animationTime = 60 / songInformation.bpm;
+    speakers.forEach(speaker => {
+      speaker.style.animation = `play ${animationTime}s infinite`;
+    });
   } else {
+    speakers.forEach(speaker => {
+      speaker.style.animation = ``;
+    });
     loopPlayDiode.classList.remove('glowing');
   }
   if (originalTrouper.isPlaying()) {
@@ -252,7 +274,6 @@ loopForward.addEventListener('mouseup', e => {
 loopBackward.addEventListener('mousedown', e => {
   loopTrouper.backFive();
   loopBackwardDiode.classList.add('glowing');
-  // loopTrouper.fastForward();
 });
 loopBackward.addEventListener('mouseup', e => {
   loopBackwardDiode.classList.remove('glowing');
@@ -262,12 +283,28 @@ loopLooping.addEventListener('click', e => {
   loopLoopingDiode.classList.toggle('glowing');
   loopTrouper.toogleLoop();
 });
+
+loopCopyLoop.addEventListener('click', e => {
+  if (loopTrouper.hasLoop()) {
+    const copyLoop = loopTrouper.getLoopPosition();
+    const buffer = loopTrouper.exportLoop(copyLoop.start, copyLoop.end);
+    loopTrouper.pause();
+    originalTrouper.pause();
+    orgPlayDiode.classList.remove('glowing');
+    loopPlayDiode.classList.remove('glowing');
+    loopTrouper.setAudioBuffer(buffer);
+    loopTrouper.loadBuffer(buffer);
+  }
+});
+
 //========================= EXPORT LOOP =====================================
 
 createSmartLoop.addEventListener('click', e => {
   const loop = originalTrouper.suggestLoop(minimumLoopLength);
   const buffer = originalTrouper.exportLoop(loop.start, loop.end);
   originalTrouper.pause();
+  orgPlayDiode.classList.remove('glowing');
+  loopPlayDiode.classList.remove('glowing');
   loopTrouper.setAudioBuffer(buffer);
   loopTrouper.loadBuffer(buffer);
 });
@@ -321,6 +358,7 @@ lowPassSlider.addEventListener('input', e => {
   lowPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
   loopTrouper.setLowPassFrequency(e.target.value);
 });
+
 //======================== High PASS =========================\\
 highPassSwitch.addEventListener('click', e => {
   loopTrouper.toggleHighPass();
