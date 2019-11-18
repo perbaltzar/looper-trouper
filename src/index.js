@@ -231,6 +231,9 @@ originalLooping.addEventListener('click', e => {
 
 copyLoopButton.addEventListener('click', e => {
   if (originalTrouper.hasLoop()) {
+    speakers.forEach(speaker => {
+      speaker.style.animation = ``;
+    });
     const copyLoop = originalTrouper.getLoopPosition();
     const buffer = originalTrouper.exportLoop(copyLoop.start, copyLoop.end);
     originalTrouper.pause();
@@ -286,6 +289,9 @@ loopLooping.addEventListener('click', e => {
 
 loopCopyLoop.addEventListener('click', e => {
   if (loopTrouper.hasLoop()) {
+    speakers.forEach(speaker => {
+      speaker.style.animation = ``;
+    });
     const copyLoop = loopTrouper.getLoopPosition();
     const buffer = loopTrouper.exportLoop(copyLoop.start, copyLoop.end);
     loopTrouper.pause();
@@ -300,6 +306,9 @@ loopCopyLoop.addEventListener('click', e => {
 //========================= EXPORT LOOP =====================================
 
 createSmartLoop.addEventListener('click', e => {
+  speakers.forEach(speaker => {
+    speaker.style.animation = ``;
+  });
   const loop = originalTrouper.suggestLoop(minimumLoopLength);
   const buffer = originalTrouper.exportLoop(loop.start, loop.end);
   originalTrouper.pause();
