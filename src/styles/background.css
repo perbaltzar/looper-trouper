@@ -7,10 +7,10 @@ main {
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  padding: 15px 80px;
+  padding: 1vh 80px;
 }
 .handle {
-  margin-top: 50px;
+  margin-top: 3vh;
   width: 85vw;
   display: flex;
 }
@@ -24,7 +24,7 @@ main {
 
 .left-handle {
   background-color: #959394;
-  height: 100px;
+  height: 9vh;
   width: 30px;
   border-top-left-radius: 10px;
   box-shadow: 35px 35px 0px #c24051;
@@ -32,7 +32,7 @@ main {
 
 .right-handle {
   background-color: #959394;
-  height: 100px;
+  height: 9vh;
   width: 30px;
   border-top-right-radius: 10px;
   box-shadow: 35px 35px 0px #c24051;
