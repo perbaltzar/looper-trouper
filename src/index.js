@@ -221,6 +221,8 @@ copyLoopButton.addEventListener('click', e => {
     const copyLoop = originalTrouper.getLoopPosition();
     const buffer = originalTrouper.exportLoop(copyLoop.start, copyLoop.end);
     originalTrouper.pause();
+    orgPlayDiode.classList.remove('glowing');
+    loopPlayDiode.classList.remove('glowing');
     loopTrouper.setAudioBuffer(buffer);
     loopTrouper.loadBuffer(buffer);
   }
@@ -268,6 +270,8 @@ createSmartLoop.addEventListener('click', e => {
   const loop = originalTrouper.suggestLoop(minimumLoopLength);
   const buffer = originalTrouper.exportLoop(loop.start, loop.end);
   originalTrouper.pause();
+  orgPlayDiode.classList.remove('glowing');
+  loopPlayDiode.classList.remove('glowing');
   loopTrouper.setAudioBuffer(buffer);
   loopTrouper.loadBuffer(buffer);
 });
