@@ -120,6 +120,15 @@ export default class LooperTrouper {
         this.placingLoop = false;
       }
     });
+
+    this.pixi.renderer.plugins.interaction.on('pointerupoutside', event => {
+      if (this.placingLoop) {
+        const start = this.duration * (this.loopGraphics.start / this.width);
+        const end = this.duration * (this.loopGraphics.end / this.width);
+        this.setLoopPosition(start, end);
+        this.placingLoop = false;
+      }
+    });
     this.ticker();
   }
 
