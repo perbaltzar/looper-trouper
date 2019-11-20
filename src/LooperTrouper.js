@@ -160,7 +160,7 @@ export default class LooperTrouper {
    */
 
   async loadAudio(url) {
-    this.reset();
+    this.prepareNewSong();
     this.buffer = await createAudioBuffer(this.audioContext, url);
     this.bpm = await getBPM(url);
     this.peaks = getPeaks(this.buffer, 300);
@@ -176,7 +176,7 @@ export default class LooperTrouper {
    * @param buffer audio buffer
    */
   loadBuffer(buffer) {
-    this.reset();
+    this.prepareNewSong();
     this.peaks = getPeaks(buffer, 300);
     this.duration = this.buffer.duration;
     this.sampleRate = this.buffer.sampleRate;
@@ -778,6 +778,31 @@ export default class LooperTrouper {
   }
 
   /**
+   * makes preperation for loading new url or audio buffer
+   */
+  prepareNewSong() {
+    this.disconnectSource();
+    this.pause();
+    this.state = PAUSED;
+    this.loopStart = null;
+    this.loopEnd = null;
+    this.loopGraphics.clear();
+    this.isLooped = false;
+    this.setStartTime(this.getNow());
+    // reset graphics
+    if (this.bars) {
+      this.bars.forEach(bar => {
+        bar.clear();
+      });
+    }
+    this.changeLocatorPosition(0);
+    this.progress = 0;
+    this.eqOn = false;
+    this.lowPassOn = false;
+    this.highPassOn = false;
+  }
+
+  /**
    * reset all variables
    */
   reset() {
@@ -801,5 +826,8 @@ export default class LooperTrouper {
     this.eqOn = false;
     this.lowPassOn = false;
     this.highPassOn = false;
+
+    this.volume = this.audioContext.createGain();
+    this.volumeOn = false;
   }
 }

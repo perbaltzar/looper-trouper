@@ -330,6 +330,9 @@ lengthSlider.addEventListener('input', e => {
 
 //========================= RESET SONG ============================\\
 resetSong.addEventListener('click', e => {
+  speakers.forEach(speaker => {
+    speaker.style.animation = ``;
+  });
   dropzone.classList.remove('hidden');
   originalTrouper.reset();
   loopTrouper.reset();
