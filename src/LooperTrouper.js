@@ -46,6 +46,8 @@ export default class LooperTrouper {
   /** @property {Boolean} lowPassOn if the lowpass is on */
   /** @property {BiquadFilterNode} highpass if highpass is on*/
   /** @property {Boolean} highPassOn if the eq is on */
+  /** @property {GainNode} volume gain node for the master volume */
+  /** @property {Boolean} volumeOn if the master volume is on */
 
   constructor(view, width, height, looped, emitter) {
     this.progress = 0;
@@ -77,9 +79,11 @@ export default class LooperTrouper {
     ];
     this.lowpass = this.createFilter('lowpass', 14000);
     this.highpass = this.createFilter('highpass', 0);
+    this.volume = this.audioContext.createGain();
     this.eqOn = false;
     this.lowPassOn = false;
     this.highPassOn = false;
+    this.volumeOn = false;
   }
 
   /**
@@ -234,6 +238,11 @@ export default class LooperTrouper {
         connections[i - 1].connect(connections[i]);
       }
       connections[i - 1].connect(this.audioContext.destination);
+      return;
+    }
+    if (this.volumeOn) {
+      this.source.connect(this.volume);
+      this.volume.connect(this.audioContext.destination);
       return;
     }
     this.source.connect(this.audioContext.destination);
@@ -738,6 +747,22 @@ export default class LooperTrouper {
   }
 
   /**
+   * toggle volume on and off
+   */
+  toggleVolume() {
+    this.volumeOn = !this.volumeOn;
+  }
+
+  /**
+   * set the gain of the volume node
+   * @param gain value between 0 and 1
+   */
+  setVolume(gain) {
+    this.volume.gain = gain;
+    this.play();
+  }
+
+  /**
    * reset all variables
    */
   reset() {
@@ -761,5 +786,6 @@ export default class LooperTrouper {
     this.eqOn = false;
     this.lowPassOn = false;
     this.highPassOn = false;
+    this.volumeOn = false;
   }
 }
