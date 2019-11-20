@@ -46,6 +46,8 @@ export default class LooperTrouper {
   /** @property {Boolean} lowPassOn if the lowpass is on */
   /** @property {BiquadFilterNode} highpass if highpass is on*/
   /** @property {Boolean} highPassOn if the eq is on */
+  /** @property {GainNode} volume gain node for the master volume */
+  /** @property {Boolean} volumeOn if the master volume is on */
 
   constructor(view, width, height, looped, emitter) {
     this.progress = 0;
@@ -77,9 +79,11 @@ export default class LooperTrouper {
     ];
     this.lowpass = this.createFilter('lowpass', 14000);
     this.highpass = this.createFilter('highpass', 0);
+    this.volume = this.audioContext.createGain();
     this.eqOn = false;
     this.lowPassOn = false;
     this.highPassOn = false;
+    this.volumeOn = false;
   }
 
   /**
@@ -156,7 +160,7 @@ export default class LooperTrouper {
    */
 
   async loadAudio(url) {
-    this.reset();
+    this.prepareNewSong();
     this.buffer = await createAudioBuffer(this.audioContext, url);
     this.bpm = await getBPM(url);
     this.peaks = getPeaks(this.buffer, 300);
@@ -172,7 +176,7 @@ export default class LooperTrouper {
    * @param buffer audio buffer
    */
   loadBuffer(buffer) {
-    this.reset();
+    this.prepareNewSong();
     this.peaks = getPeaks(buffer, 300);
     this.duration = this.buffer.duration;
     this.sampleRate = this.buffer.sampleRate;
@@ -233,7 +237,18 @@ export default class LooperTrouper {
       for (i; i < connections.length; i++) {
         connections[i - 1].connect(connections[i]);
       }
+
+      if (this.volumeOn) {
+        connections[i - 1].connect(this.volume);
+        this.volume.connect(this.audioContext.destination);
+        return;
+      }
       connections[i - 1].connect(this.audioContext.destination);
+      return;
+    }
+    if (this.volumeOn) {
+      this.source.connect(this.volume);
+      this.volume.connect(this.audioContext.destination);
       return;
     }
     this.source.connect(this.audioContext.destination);
@@ -659,8 +674,10 @@ export default class LooperTrouper {
    */
   toggleHighPass() {
     this.highPassOn = !this.highPassOn;
-    this.setStartTime(this.getProgress());
-    this.play();
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
   }
 
   /**
@@ -676,8 +693,10 @@ export default class LooperTrouper {
    */
   toggleLowPass() {
     this.lowPassOn = !this.lowPassOn;
-    this.setStartTime(this.getProgress());
-    this.play();
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
   }
 
   /**
@@ -693,8 +712,10 @@ export default class LooperTrouper {
    */
   toggleEq() {
     this.eqOn = !this.eqOn;
-    this.setStartTime(this.getProgress());
-    this.play();
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
   }
 
   /**
@@ -738,6 +759,50 @@ export default class LooperTrouper {
   }
 
   /**
+   * toggle volume on and off
+   */
+  toggleVolume() {
+    this.volumeOn = !this.volumeOn;
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
+  }
+
+  /**
+   * set the gain of the volume node
+   * @param gain value between 0 and 1
+   */
+  setVolume(gain) {
+    this.volume.gain.value = gain;
+  }
+
+  /**
+   * makes preperation for loading new url or audio buffer
+   */
+  prepareNewSong() {
+    this.disconnectSource();
+    this.pause();
+    this.state = PAUSED;
+    this.loopStart = null;
+    this.loopEnd = null;
+    this.loopGraphics.clear();
+    this.isLooped = false;
+    this.setStartTime(this.getNow());
+    // reset graphics
+    if (this.bars) {
+      this.bars.forEach(bar => {
+        bar.clear();
+      });
+    }
+    this.changeLocatorPosition(0);
+    this.progress = 0;
+    this.eqOn = false;
+    this.lowPassOn = false;
+    this.highPassOn = false;
+  }
+
+  /**
    * reset all variables
    */
   reset() {
@@ -761,5 +826,8 @@ export default class LooperTrouper {
     this.eqOn = false;
     this.lowPassOn = false;
     this.highPassOn = false;
+
+    this.volume = this.audioContext.createGain();
+    this.volumeOn = false;
   }
 }

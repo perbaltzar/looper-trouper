@@ -50,6 +50,7 @@ const resetSong = document.querySelector('.reset-song');
 const lowPassSwitch = document.querySelector('.low-pass-button');
 const highPassSwitch = document.querySelector('.high-pass-button');
 const eqSwitch = document.querySelector('.eq-button');
+const volumeSwitch = document.querySelector('.volume-button');
 
 //=========== DIODES =================//
 const diodes = document.querySelectorAll('.diode');
@@ -70,6 +71,7 @@ const loopLoopingDiode = document.querySelector('.loop-looping-diode');
 const lowPassDiode = document.querySelector('.low-pass-diode');
 const highPassDiode = document.querySelector('.high-pass-diode');
 const eqDiode = document.querySelector('.eq-diode');
+const volumeDiode = document.querySelector('.volume-diode');
 
 //=========== DROP IN =================
 const dropIn = document.querySelector('.drop-in');
@@ -85,8 +87,10 @@ const mid = document.querySelector('#mid');
 const highMid = document.querySelector('#high-mid');
 const high = document.querySelector('#high');
 
+// filters
 const lowPassSlider = document.querySelector('.low-pass-slider');
 const highPassSlider = document.querySelector('.high-pass-slider');
+const volumeSlider = document.querySelector('.volume-slider');
 
 //=========== DROP ZONE ===============//
 const dropzone = document.querySelector('.drop-zone');
@@ -326,6 +330,9 @@ lengthSlider.addEventListener('input', e => {
 
 //========================= RESET SONG ============================\\
 resetSong.addEventListener('click', e => {
+  speakers.forEach(speaker => {
+    speaker.style.animation = ``;
+  });
   dropzone.classList.remove('hidden');
   originalTrouper.reset();
   loopTrouper.reset();
@@ -376,4 +383,17 @@ highPassSwitch.addEventListener('click', e => {
 highPassSlider.addEventListener('input', e => {
   highPassFrequency.innerText = `Frequenzy: ${e.target.value}`;
   loopTrouper.setHighPassFrequency(e.target.value);
+});
+
+//================== VOLUME =========================\\
+
+volumeSwitch.addEventListener('click', e => {
+  originalTrouper.toggleVolume();
+  loopTrouper.toggleVolume();
+  volumeDiode.classList.toggle('glowing');
+});
+volumeSlider.addEventListener('input', e => {
+  const gain = e.target.value / 100;
+  originalTrouper.setVolume(gain);
+  loopTrouper.setVolume(gain);
 });
