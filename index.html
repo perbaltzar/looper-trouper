@@ -23,20 +23,22 @@
     <title>Looper Trouper</title>
   </head>
   <body>
+    <!-- DROP ZONE-->
     <div class="drop-message drop-loading hidden">
       <h5>Loading</h5>
       <img class="loading-animation" src="src/assets/icons/loading.svg">
-    </div>
-      
+    </div>     
     <div class="drop-zone">
       <h5 class="drop-message drop-message-intro ">Drop a file to start looping</h5>
       <h5 class="drop-message drop-message-hover hidden">Drop it!!</h5>
     </div>
-    <div class="drop-in">
+    <!-- DROP IN MENU -->
+    <div class="drop-in active">
       <button class="drop-in-button"><img class="arrow-icon" src="src/assets/icons/arrow.svg" /></button>
       <div class="drop-in-container">
         <div class="information-container">
           <div class="song-information">
+            <!-- SONG INFO -->
             <h3>Song Info</h3>
             <p class="song-name">Name:</p>
             <p class="song-duration">Duration:</p>
@@ -49,6 +51,7 @@
             <p class="loop-duration">Duration:</p>
           </div>
         </div>
+        <!-- EQUALIZER -->
         <div class="equalizer-container">
           <div class="container-header eq-header">
             <h3>Equalizer</h3>
@@ -74,6 +77,7 @@
             </div>
           </form>
         </div>
+        <!-- LOW PASS FILTER -->
         <div class="low-pass-container">
           <div class="container-header">
             <h3>Low Pass Filter</h3>
@@ -87,6 +91,7 @@
             <p class="low-pass-frequency">Frequency: </p>
           </div>
         </div>
+        <!-- HIGH PASS FILTER -->
         <div class="high-pass-container">
           <div class="container-header">
             <h3>High Pass Filter</h3>
@@ -100,25 +105,38 @@
             <p class="high-pass-frequency">Frequency: </p>
           </div>
         </div>
+        <!-- SMART LOOP -->
         <div class="smart-loop-container">
           <h3>Smart Loop</h3>
           <div class="smart-loop-slider-container">
             <div>
               <input id="length-slider" class="slider smart-loop-slider" type="range" min="1" max="100" value="5"> </input>
-              <p class="minimun-length-display">Length: 5 seconds</p>
+              <p class="minimun-length-display">Minimum length: 5 seconds</p>
             </div>
             <button class="smart-loop-button">Get Smart Loop</button>
           </div>
         </div>
+        <!-- MASTER VOLUME -->
+        <div class="volume-container">
+          <div class="container-header">
+            <h3>Volume</h3>
+            <button class="on-off-button">
+              ON
+              <span class="diode volume-diode"></span>
+            </button>
+          </div>
+          <div class="volume-slider-container">
+            <input class="slider volume-slider" type="range" min="0" max="100" value="100"> </input>
+          </div>
+        </div>
+        <!-- RESET SONG -->
         <div class="reset-container">
           <h3>Remove song and reset</h3>
           <button class="reset-song controll-button"><img src="src/assets/icons/trash.svg">Reset All</button>
-
         </div>
-
-        
       </div>
     </div>
+    <!-- RADIO -->
     <div class="handle">
       <div class="left-handle"></div>
       <div class="top-handle"></div>
