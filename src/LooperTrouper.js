@@ -237,6 +237,12 @@ export default class LooperTrouper {
       for (i; i < connections.length; i++) {
         connections[i - 1].connect(connections[i]);
       }
+
+      if (this.volumeOn) {
+        connections[i - 1].connect(this.volume);
+        this.volume.connect(this.audioContext.destination);
+        return;
+      }
       connections[i - 1].connect(this.audioContext.destination);
       return;
     }
@@ -668,8 +674,10 @@ export default class LooperTrouper {
    */
   toggleHighPass() {
     this.highPassOn = !this.highPassOn;
-    this.setStartTime(this.getProgress());
-    this.play();
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
   }
 
   /**
@@ -685,8 +693,10 @@ export default class LooperTrouper {
    */
   toggleLowPass() {
     this.lowPassOn = !this.lowPassOn;
-    this.setStartTime(this.getProgress());
-    this.play();
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
   }
 
   /**
@@ -702,8 +712,10 @@ export default class LooperTrouper {
    */
   toggleEq() {
     this.eqOn = !this.eqOn;
-    this.setStartTime(this.getProgress());
-    this.play();
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
   }
 
   /**
@@ -751,6 +763,10 @@ export default class LooperTrouper {
    */
   toggleVolume() {
     this.volumeOn = !this.volumeOn;
+    this.setProgress(this.getProgressPlayed());
+    if (this.isPlaying()) {
+      this.play();
+    }
   }
 
   /**
@@ -758,8 +774,7 @@ export default class LooperTrouper {
    * @param gain value between 0 and 1
    */
   setVolume(gain) {
-    this.volume.gain = gain;
-    this.play();
+    this.volume.gain.value = gain;
   }
 
   /**
@@ -786,6 +801,5 @@ export default class LooperTrouper {
     this.eqOn = false;
     this.lowPassOn = false;
     this.highPassOn = false;
-    this.volumeOn = false;
   }
 }
