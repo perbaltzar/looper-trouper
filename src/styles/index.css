@@ -2,10 +2,11 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: "Michroma", sans-serif;
+  font-family: 'Michroma', sans-serif;
 }
 
 body {
+  height: 100vh;
   background-color: #ff7f74;
   overflow: hidden;
   padding: 0px 70px 20px 40px;
@@ -28,6 +29,6 @@ button:hover {
   cursor: pointer;
 }
 
-p{
+p {
   font-size: 14px;
 }
