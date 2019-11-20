@@ -574,7 +574,7 @@ export default class LooperTrouper {
    */
   findFirstBeat() {
     // calculating the resolution needed by duration 100 per second
-    const partsPerSecond = 50;
+    const partsPerSecond = 100;
     const resolution = Math.round(this.duration * partsPerSecond);
 
     // Loop through and check difference between peaks, lower the need to check different songs
@@ -758,5 +758,8 @@ export default class LooperTrouper {
     }
     this.changeLocatorPosition(0);
     this.progress = 0;
+    this.eqOn = false;
+    this.lowPassOn = false;
+    this.highPassOn = false;
   }
 }
