@@ -43,6 +43,8 @@ const loopForward = document.querySelector('.loop-forward');
 const loopBackward = document.querySelector('.loop-back');
 const loopLooping = document.querySelector('.loop-looping');
 const loopCopyLoop = document.querySelector('.copy-loop-loop');
+const loopSaveLoop = document.querySelector('.save-loop');
+const loopDownloadLoop = document.querySelector('.download-button');
 
 // Drop in buttons
 const createSmartLoop = document.querySelector('.smart-loop-button');
@@ -157,7 +159,7 @@ dropzone.addEventListener(
       dragCounter = 0;
       dropzone.classList.toggle('hidden');
       dropMessage.classList.add('hidden');
-      originalTrouper.loadAudio(URL.createObjectURL(file[0]));
+      originalTrouper.loadAudio(URL.createObjectURL(file[0]));      
       originalTrouper.setFileInformation(file[0].name, file[0].size);
     }
   },
@@ -245,6 +247,7 @@ copyLoopButton.addEventListener('click', e => {
     loopPlayDiode.classList.remove('glowing');
     loopTrouper.setAudioBuffer(buffer);
     loopTrouper.loadBuffer(buffer);
+    loopTrouper.setFileInformation(originalTrouper.name, originalTrouper.size);
   }
 });
 
@@ -304,6 +307,7 @@ loopCopyLoop.addEventListener('click', e => {
     loopPlayDiode.classList.remove('glowing');
     loopTrouper.setAudioBuffer(buffer);
     loopTrouper.loadBuffer(buffer);
+    loopTrouper.setFileInformation(originalTrouper.name, originalTrouper.size);
   }
 });
 
@@ -319,7 +323,8 @@ createSmartLoop.addEventListener('click', e => {
   orgPlayDiode.classList.remove('glowing');
   loopPlayDiode.classList.remove('glowing');
   loopTrouper.setAudioBuffer(buffer);
-  loopTrouper.loadBuffer(buffer);
+  loopTrouper.loadBuffer(buffer);  
+  loopTrouper.setFileInformation(originalTrouper.name, originalTrouper.size)
 });
 
 lengthSlider.addEventListener('input', e => {
@@ -397,3 +402,12 @@ volumeSlider.addEventListener('input', e => {
   originalTrouper.setVolume(gain);
   loopTrouper.setVolume(gain);
 });
+
+//================== SAVE TO COMPUTER =========================\\
+loopSaveLoop.addEventListener('click', async e => {
+  const downloadData = loopTrouper.createDownload()
+  
+  loopDownloadLoop.style.display = 'block'
+  loopDownloadLoop.download = downloadData.name;
+  loopDownloadLoop.href = downloadData.href;
+})
