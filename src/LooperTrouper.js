@@ -834,12 +834,12 @@ export default class LooperTrouper {
 
   /**
   * turns an AudioBuffer into a wave file.
-  * 
+  * @Param loopRepetitions number of repetitions of loop to be exported
    */ 
-  createWaveFromBuffer() {
+  createWaveFromBuffer(loopRepetitions) {
     const numOfChan = this.buffer.numberOfChannels;
-    const length = this.buffer.length * numOfChan * 2 + 44;
-    
+    const length = loopRepetitions * this.buffer.length * numOfChan * 2 + 44;
+      
     const buffer = new ArrayBuffer(length);
     const view = new DataView(buffer);
     const channels = [];
@@ -878,18 +878,22 @@ export default class LooperTrouper {
     
     
     // write interleaved data
-    for(i = 0; i < this.buffer.numberOfChannels; i++) {
-      channels.push(this.buffer.getChannelData(i));
-    }
-   
+      for(i = 0; i < this.buffer.numberOfChannels; i++) {
+        channels.push(this.buffer.getChannelData(i));
+      }
+    
     while(pos < length) {
-      for(i = 0; i < numOfChan; i++) {             // interleave channels
-        sample = Math.max(-1, Math.min(1, channels[i][offset])); // clamp
-        sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767)|0; // scale to 16-bit signed int
-        view.setInt16(pos, sample, true);          // write 16-bit sample
+      for(i = 0; i < numOfChan; i++) {             
+        sample = Math.max(-1, Math.min(1, channels[i][offset]));
+        sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767)|0;
+        view.setInt16(pos, sample, true);         
         pos += 2;
       }
-      offset++                                     // next source sample
+      offset++       
+      // This reset the offset when song ended and repetition starts
+      if (offset > channels[0].length){
+        offset = 0;
+      }                    
     }
     // create Blob
     return new Blob([buffer], {type: "audio/wav"});
@@ -905,10 +909,10 @@ export default class LooperTrouper {
   /**
   * Creates a file for download
   */
-  createDownload() {
+  createDownload(loopRepetitions) {
     if (!this.buffer) return;
 
-    const waveData = this.createWaveFromBuffer()
+    const waveData = this.createWaveFromBuffer(loopRepetitions)
 
     const newFile = URL.createObjectURL(waveData);
     
