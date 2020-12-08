@@ -211,3 +211,16 @@ h3 {
   padding: 0 40px 20px 20px;
   background: #87895d;
 }
+
+.reset-button {
+  height: 80px;
+}
+
+.export-container{
+  background: #87895d;
+  padding: 0 40px 20px 20px;
+}
+
+.repetition-text {
+  margin-top: 8px;
+}

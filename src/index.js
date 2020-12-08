@@ -25,9 +25,10 @@ const loopStart = document.querySelector('.loop-start');
 const loopEnd = document.querySelector('.loop-end');
 const loopDuration = document.querySelector('.loop-duration');
 
-//================= EFFECT ============ \\
+//================= TEXT ELEMENTS ============ \\
 const lowPassFrequency = document.querySelector('.low-pass-frequency');
 const highPassFrequency = document.querySelector('.high-pass-frequency');
+const repetitionsText = document.querySelector('.repetition-text');
 
 // ========== BUTTONS ================//
 // original buttons
@@ -94,6 +95,9 @@ const lowPassSlider = document.querySelector('.low-pass-slider');
 const highPassSlider = document.querySelector('.high-pass-slider');
 const volumeSlider = document.querySelector('.volume-slider');
 
+// export
+const repetitionSlider = document.querySelector('.repetition-slider');
+
 //=========== DROP ZONE ===============//
 const dropzone = document.querySelector('.drop-zone');
 const dropMessage = document.querySelector('.drop-message-hover');
@@ -104,6 +108,7 @@ const loading = document.querySelector('.drop-loading');
 let dragCounter = 0;
 let minimumLoopLength = 5;
 let songInformation, loopInformation;
+let loopRepetitions = 1;
 
 //=========== LOOPER TROUPER ===========//
 const originalTrouper = new LooperTrouper(
@@ -128,6 +133,7 @@ const resetInformation = () => {
   loopStart.innerText = `Start:`;
   loopEnd.innerText = `End: `;
   loopDuration.innerText = `Duration: `;
+  loopRepetitions = 1;
 };
 
 //================= EMITTER EVENTS ============//
@@ -402,10 +408,16 @@ volumeSlider.addEventListener('input', e => {
   originalTrouper.setVolume(gain);
   loopTrouper.setVolume(gain);
 });
+//================== EXPORT OPTIONS =========================\\
+repetitionSlider.addEventListener('input', e => {
+  loopRepetitions = e.target.value;
+  repetitionsText.innerText = `Repetitions of song: ${loopRepetitions}`;
+}
+)
 
 //================== SAVE TO COMPUTER =========================\\
 loopSaveLoop.addEventListener('click', async e => {
-  const downloadData = loopTrouper.createDownload()
+  const downloadData = loopTrouper.createDownload(loopRepetitions);
   
   loopDownloadLoop.style.display = 'block'
   loopDownloadLoop.download = downloadData.name;
