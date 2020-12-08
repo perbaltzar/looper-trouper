@@ -34,3 +34,7 @@
   background: radial-gradient(#99c3eb, #2b86da);
   box-shadow: 0 0 2px 3px #fff, 0 0 3px 1px #0ff;
 }
+
+.download-button {
+  display: none;
+}

@@ -17,7 +17,7 @@ export default class LooperTrouper {
   /** @property {AudioContext} audioContext */
   /** @property {PIXI.Application} pixi */
   /** @property {AudioBufferSourceNode} source audio source  */
-  /** @property {AudioBuffef} buffer the audio data */
+  /** @property {AudioBuffer} buffer the audio data */
   /** @property {Number} sampleRate sample rate of the audio */
   /** @property {String} name of audio file */
   /** @property {Number} duration of audio file in seconds */
@@ -48,6 +48,7 @@ export default class LooperTrouper {
   /** @property {Boolean} highPassOn if the eq is on */
   /** @property {GainNode} volume gain node for the master volume */
   /** @property {Boolean} volumeOn if the master volume is on */
+  /** @property {Boolean} isExporting if the Looper Trouper is current creating a downloadable file */
 
   constructor(view, width, height, looped, emitter) {
     this.progress = 0;
@@ -829,5 +830,88 @@ export default class LooperTrouper {
 
     this.volume = this.audioContext.createGain();
     this.volumeOn = false;
+  }
+
+  /**
+  * turns an AudioBuffer into a wave file.
+  * 
+   */ 
+  createWaveFromBuffer() {
+    const numOfChan = this.buffer.numberOfChannels;
+    const length = this.buffer.length * numOfChan * 2 + 44;
+    
+    const buffer = new ArrayBuffer(length);
+    const view = new DataView(buffer);
+    const channels = [];
+    let i;
+    let sample;
+    let offset = 0;
+    let pos = 0;
+
+    // Helper functions
+    const setUint16 = (data) => {
+      view.setUint16(pos, data, true);
+      pos += 2;
+    }
+    const setUint32 = (data) => {
+      view.setUint32(pos, data, true);
+      pos += 4;
+    }
+
+    // write WAVE header
+    setUint32(0x46464952);                         
+    setUint32(length - 8);                        
+    setUint32(0x45564157);                         
+
+    setUint32(0x20746d66);                       
+    setUint32(16);                                
+    setUint16(1);                               
+    setUint16(numOfChan);
+    setUint32(this.buffer.sampleRate);
+    setUint32(this.buffer.sampleRate * 2 * numOfChan); 
+    setUint16(numOfChan * 2);                     
+    setUint16(16);                                 
+
+    setUint32(0x61746164);                         
+    setUint32(length - pos - 4);
+
+    
+    
+    // write interleaved data
+    for(i = 0; i < this.buffer.numberOfChannels; i++) {
+      channels.push(this.buffer.getChannelData(i));
+    }
+   
+    while(pos < length) {
+      for(i = 0; i < numOfChan; i++) {             // interleave channels
+        sample = Math.max(-1, Math.min(1, channels[i][offset])); // clamp
+        sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767)|0; // scale to 16-bit signed int
+        view.setInt16(pos, sample, true);          // write 16-bit sample
+        pos += 2;
+      }
+      offset++                                     // next source sample
+    }
+    // create Blob
+    return new Blob([buffer], {type: "audio/wav"});
+  }
+
+  /**
+  * Creates a looper trouper file name 
+  */ 
+  createFileName() {
+    return `${this.name ? this.name : 'Anonymous'}-loopedByTrouper.wav`
+  }
+
+  /**
+  * Creates a file for download
+  */
+  createDownload() {
+    if (!this.buffer) return;
+
+    const waveData = this.createWaveFromBuffer()
+
+    const newFile = URL.createObjectURL(waveData);
+    
+    return { name: this.createFileName(), href: newFile}
   }
 }
